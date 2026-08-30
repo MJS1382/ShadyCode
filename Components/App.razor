@@ -6,16 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
     <ResourcePreloader />
+    <link rel="stylesheet" href="/bootstrap-dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/bootstrap-icons/bootstrap-icons.css" />
     <link rel="stylesheet" href="@Assets["app.css"]" />
     <link rel="stylesheet" href="@Assets["PersonalBlog.styles.css"]" />
+    
     <ImportMap />
     <HeadOutlet />
 </head>
 
 <body>
-    <Routes />
-    <ReconnectModal />
-    <script src="@Assets["_framework/blazor.web.js"]"></script>
+    <main id="main-content">
+        <Routes />
+        <ReconnectModal />
+        <script src="@Assets["_framework/blazor.web.js"]"></script>
+        <script src="/bootstrap-dist/js/bootstrap.bundle.min.js"></script>
+    </main>
 </body>
 
 </html>

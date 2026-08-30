@@ -1,6 +1,45 @@
 ﻿@inherits LayoutComponentBase
 
-@Body
+<header class="bg-dark">
+    <div class="header container-fluid">
+        <div class="row g-0">
+            <div class="col d-flex justify-content-start align-items-center">
+                <i class="bi bi-bootstrap" alt="Logo"></i>
+                <span class="ms-2">My Blog</span>
+            </div>
+            <div class="col">
+                <nav class="nav-container d-flex justify-content-center align-items-center">
+                    <NavLink class="nav-link" href="/">Home</NavLink>
+                    <NavLink class="nav-link" href="/blog">Blog</NavLink>
+                    <NavLink class="nav-link" href="/projects">Projects</NavLink>
+                    <NavLink class="nav-link" href="/about">About</NavLink>
+                </nav>
+            </div>
+            <div class="col d-flex justify-content-end align-items-center">
+                <button>
+                    <i class="bi bi-search" alt="search"></i>
+                </button>
+                @* <button>
+                    <i class="bi bi-person-circle" alt="Account"></i>
+                </button> *@
+                <button>
+                    <i class="bi bi-translate" alt="Language"></i>
+                </button>
+                <button>
+                    <i class="bi bi-moon" alt="Theme"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="main container-fluid">
+    @Body
+</div>
+
+<footer>
+    <div class="footer">fuck</div>
+</footer>
 
 <div id="blazor-error-ui" data-nosnippet>
     An unhandled error has occurred.

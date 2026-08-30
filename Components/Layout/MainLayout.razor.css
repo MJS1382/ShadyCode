@@ -12,9 +12,42 @@
     z-index: 1000;
 }
 
-    #blazor-error-ui .dismiss {
-        cursor: pointer;
-        position: absolute;
-        right: 0.75rem;
-        top: 0.5rem;
-    }
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+}
+
+.header ::deep button {
+    border: none;
+    border-radius: 15px;
+    background-color: none;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+}
+
+.header ::deep button:hover {
+    background-color: beige;
+}
+
+.nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+
+.nav-container ::deep a {
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+.footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    background-color: gray;
+}

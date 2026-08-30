@@ -1,0 +1,69 @@
+# Build outputs
+[Oo]bj/
+[Bb]in/
+[Dd]ebug/
+[Rr]elease/
+*.dll
+*.exe
+*.out
+*.app
+
+# Visual Studio / .NET
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.rsuser
+*.cache
+*.log
+*.pdb
+*.mdb
+*.pidb
+*.opendb
+*.VC.db
+*.dbmdl
+*.jfm
+*.snap
+
+# NuGet
+packages/
+*.nupkg
+*.snupkg
+.nuget/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# ASP.NET / Blazor / static web assets
+*.staticwebassets.runtime.json
+*.staticwebassets.build.json
+*.staticwebassets.development.json
+*.staticwebassets.endpoints.json
+*.generated.cs
+*.g.cs
+
+# Node / front-end tooling
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.tmp
+*.temp
+
+# Compression archives
+*.gz
+
+# Local environment secrets
+.env
+.env.*
+secrets.json
+appsettings.Development.local.json
