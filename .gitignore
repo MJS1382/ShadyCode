@@ -43,6 +43,8 @@ artifacts/
 *.staticwebassets.endpoints.json
 *.generated.cs
 *.g.cs
+*.AssemblyInfoInputs.cache
+*.AssemblyInfo.cs
 
 # Node / front-end tooling
 node_modules/
@@ -67,3 +69,7 @@ Desktop.ini
 .env.*
 secrets.json
 appsettings.Development.local.json
+
+
+obj/Debug/net10.0/PersonalBlog.AssemblyInfoInputs.cache
+obj/Debug/net10.0/PersonalBlog.AssemblyInfo.cs

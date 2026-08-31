@@ -8,12 +8,7 @@
                 <span class="ms-2">My Blog</span>
             </div>
             <div class="col">
-                <nav class="nav-container d-flex justify-content-center align-items-center">
-                    <NavLink class="nav-link" href="/">Home</NavLink>
-                    <NavLink class="nav-link" href="/blog">Blog</NavLink>
-                    <NavLink class="nav-link" href="/projects">Projects</NavLink>
-                    <NavLink class="nav-link" href="/about">About</NavLink>
-                </nav>
+                <Navbar/>
             </div>
             <div class="col d-flex justify-content-end align-items-center">
                 <button class="btn btn-outline-light mx-1">
@@ -33,12 +28,14 @@
     </div>
 </header>
 
-<div class="main container-fluid">
+<div class="main container-fluid" style="height: 100vh;">
     @Body
 </div>
 
 <footer>
-    <div class="footer">fuck</div>
+    <div class="footer bg-dark text-light">
+        &copy; 2026 My Blog. All rights reserved.
+    </div>
 </footer>
 
 <div id="blazor-error-ui" data-nosnippet>

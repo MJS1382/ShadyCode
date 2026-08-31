@@ -1,0 +1,56 @@
+.nav-container {
+    /* display: flex;
+    align-items: center;
+    justify-content: center; */
+    padding: 10px;
+}
+
+.nav-container ::deep a {
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+#menu {
+    display: none;
+}
+
+#menu.open {
+    display: block;
+    position: absolute;
+    background-color: #212529;
+    text-align: center;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    animation: dropdown 0.3s ease;
+}
+
+@keyframes dropdown {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+#menu.open ::deep a {
+    padding: 10px;
+    display: block;
+    border-bottom: 1px solid #343a40;
+}
+
+#menu.open ::deep a:first-child {
+    border-top: 1px solid #343a40;
+}
+
+#menu.open ::deep a:hover {
+    background-color: #1c1e21;
+}
+
+#menu.open ::deep a:active {
+    background-color: #1c1e21;
+    transform: scale(0.95);
+}

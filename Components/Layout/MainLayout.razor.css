@@ -32,22 +32,9 @@
     background-color: beige;
 }
 
-.nav-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px;
-}
-
-.nav-container ::deep a {
-    margin-left: 2px;
-    margin-right: 2px;
-}
-
 .footer {
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 10px;
-    background-color: gray;
 }
