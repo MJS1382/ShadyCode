@@ -48,10 +48,3 @@ body {
     max-width: 1400px;
     margin: 0 auto;
 }
-
-@media (prefers-color-scheme: dark) {
-    body{
-        --bs-body-color: #e5e5e5;
-        --bs-body-bg: #1a1a1a;
-    }
-}

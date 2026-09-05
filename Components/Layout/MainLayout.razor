@@ -1,25 +1,37 @@
-﻿@inherits LayoutComponentBase
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@inherits LayoutComponentBase
 
-<header class="bg-dark">
-    <div class="header container-fluid">
+<header class="bg-dark shadow-lg">
+    <div class="header">
         <div class="row g-0">
-            <div class="col d-flex justify-content-start align-items-center">
-                <i class="bi bi-bootstrap" alt="Logo"></i>
-                <span class="ms-2">My Blog</span>
+            <div class="col-5 col-sm d-flex justify-content-start align-items-center text-center">
+                <i class="bi bi-bootstrap ms-2" alt="Logo"></i>
+                <span class="ms-2">Shady Code</span>
             </div>
             <div class="col">
                 <Navbar/>
             </div>
-            <div class="col d-flex justify-content-end align-items-center">
+            <div class="col-5 col-sm d-flex justify-content-end align-items-center">
                 <button class="btn btn-outline-light mx-1">
                     <i class="bi bi-search" alt="search"></i>
                 </button>
-                @* <button class="btn btn-outline-light">
-                    <i class="bi bi-person-circle" alt="Account"></i>
-                </button> *@
                 <button class="btn btn-outline-light mx-1">
-                    <i class="bi bi-translate" alt="Language"></i>
+                    <AuthorizeView>
+                        <Authorized>
+                            <NavLink href="/account" class="text-decoration-none text-light">
+                                <i class="bi bi-person-circle" alt="Account"></i>
+                            </NavLink>
+                        </Authorized>
+                        <NotAuthorized>
+                            <NavLink href="/auth/register" class="text-decoration-none text-light">
+                                <i class="bi bi-person-circle" alt="Account"></i>
+                            </NavLink>
+                        </NotAuthorized>
+                    </AuthorizeView>
                 </button>
+                @* <button class="btn btn-outline-light mx-1">
+                    <i class="bi bi-translate" alt="Language"></i>
+                </button> *@
                 <button class="btn btn-outline-light mx-1">
                     <i class="bi bi-moon" alt="Theme"></i>
                 </button>
@@ -28,13 +40,13 @@
     </div>
 </header>
 
-<div class="main container-fluid" style="height: 100vh;">
+<div class="main container-fluid" style="height: 100%; min-height: 100vh;">
     @Body
 </div>
 
 <footer>
-    <div class="footer bg-dark text-light">
-        &copy; 2026 My Blog. All rights reserved.
+    <div class="footer bg-dark text-light sticky-bottom">
+        &copy; 2026 Shady Code. All rights reserved.
     </div>
 </footer>
 

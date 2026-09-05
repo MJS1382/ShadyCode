@@ -1,0 +1,119 @@
+@page "/auth/register"
+@rendermode InteractiveServer
+@using Microsoft.AspNetCore.Components.Authorization
+@using PersonalBlog.Models
+@using PersonalBlog.Services.Auth
+@inject NavigationManager NavigationManager
+@inject IAuthService authService
+
+<AuthorizeView>
+    <NotAuthorized>
+        <div class="text-center">
+            <div class="d-flex flex-column justify-content-center align-items-center p-2 m-2">
+                <h3 class="my-4">Register</h3>
+
+                <EditForm FormName="registerForm" Model="@registerModel" OnValidSubmit="HandleValidSubmit" Context="idk">
+                    <DataAnnotationsValidator />
+                    @* <ValidationSummary /> *@
+                    <div>
+                        <p class="text-danger">@errorMessage</p>
+                        @if (sendingEmail) {
+                            <p class="text-success">• Sending confirmation email ...</p>
+                        }
+                    </div>
+
+                    <div style="max-width: 500px; background-color: #1e2122; padding: 20px; border-radius: 10px;">
+                        <div class="row d-flex align-items-center mb-3">
+                            <label for="username" class="form-label col-sm-3 mb-sm-0">Username</label>
+                            <div class="col-sm-9">
+                                <InputText id="username" class="form-control" @bind-Value="registerModel.UserName" />
+                            </div>
+                            <ValidationMessage For="@(() => registerModel.UserName)" class="d-inline text-danger ms-sm-5 my-1" />
+                        </div>
+
+                        <div class="row d-flex align-items-center mb-3">
+                            <label for="email" class="form-label col-sm-3 mb-sm-0">Email</label>
+                            <div class="col-sm-9">
+                                <InputText id="email" type="email" class="form-control" @bind-Value="registerModel.Email" />
+                            </div>
+                            <ValidationMessage For="@(() => registerModel.Email)" class="d-inline text-danger ms-sm-5 my-1" />
+                        </div>
+
+                        <div class="row d-flex align-items-center mb-3">
+                            <label for="password" class="form-label col-sm-3 mb-sm-0">Password</label>
+                            <div class="col-sm-9">
+                                <InputText id="password" type="password" class="form-control" @bind-Value="registerModel.Password" />
+                            </div>
+                            <ValidationMessage For="@(() => registerModel.Password)" class="d-inline text-danger ms-sm-5 my-1" />
+                        </div>
+
+                        <div class="row d-flex align-items-center mb-3">
+                            <label for="confirmPassword" class="form-label col-sm-3 mb-sm-0">Confirm Password</label>
+                            <div class="col-sm-9">
+                                <InputText id="confirmPassword" type="password" class="form-control" @bind-Value="registerModel.ConfirmPassword" />
+                            </div>
+                            <ValidationMessage For="@(() => registerModel.ConfirmPassword)" class="d-inline text-danger ms-sm-5 my-1" />
+                        </div>
+
+                        <div class="d-inline mb-3">
+                            <InputCheckbox id="IsOptIn" class="form-controll" @bind-Value="registerModel.IsOptInForNotifications"/>
+                            <p class="d-inline">I don't want to recieve any email notification.</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <p class="d-inline">Already have an account ?</p>
+                        <NavLink href="/auth/login" class="d-inline">Login</NavLink>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Register</button>
+                </EditForm>
+            </div>
+        </div>
+    </NotAuthorized>
+    <Authorized>
+        You are currently logged in as @errorMessage.
+    </Authorized>
+</AuthorizeView>
+
+
+@code {
+    [CascadingParameter]
+    public required HttpContext httpContext { get; set; }
+
+    [SupplyParameterFromForm]
+    public required RegisterInputModel registerModel { get; set; }
+
+    private string? errorMessage;
+    private bool sendingEmail;
+
+    protected override void OnInitialized()
+    {
+        registerModel = new();
+
+        if (authService.GetCurrentUser() is ApplicationUser user && user is not null)
+            errorMessage = user.UserName;
+    }
+    
+    private async Task HandleValidSubmit()
+    {
+        var registerTask = authService.RegisterAsync(registerModel);
+        sendingEmail = true;
+        var result = await registerTask;
+        sendingEmail =false;
+
+        if (result != RegisterResult.Success)
+        {
+            errorMessage = result switch {
+                RegisterResult.UserNameAlreadyExists => "• Username already exists",
+                RegisterResult.EmailAlreadyExists => "• Email already exists",
+                RegisterResult.InvalidInput => "• Invalid input",
+                RegisterResult.FailedToSendEmail => "• Failed to send confirmation email",
+                _ => "• Something went wrong while processing your request"
+            };
+            
+            return;
+        }
+
+        NavigationManager.NavigateTo("/auth/ckeck-email");
+    }
+}

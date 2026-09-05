@@ -3,10 +3,12 @@
 [Bb]in/
 [Dd]ebug/
 [Rr]elease/
+.idea/
 *.dll
 *.exe
 *.out
 *.app
+*.idea
 
 # Visual Studio / .NET
 .vs/
@@ -41,6 +43,8 @@ artifacts/
 *.staticwebassets.build.json
 *.staticwebassets.development.json
 *.staticwebassets.endpoints.json
+*.development.json
+*.Development.json
 *.generated.cs
 *.g.cs
 *.AssemblyInfoInputs.cache
@@ -73,3 +77,4 @@ appsettings.Development.local.json
 
 obj/Debug/net10.0/PersonalBlog.AssemblyInfoInputs.cache
 obj/Debug/net10.0/PersonalBlog.AssemblyInfo.cs
+appsettings.Development.json

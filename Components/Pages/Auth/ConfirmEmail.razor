@@ -1,0 +1,36 @@
+@page "/auth/confirm-email/"
+@using PersonalBlog.Services.Auth
+@inject IAuthService authService
+
+<div class="text-center">
+    <br>
+    <br>
+    <h3 class="mt-3 @(message.StartsWith("Email") ? "text-success" : "text-danger")">
+        @message
+    </h3>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    public string? username { get; set; }
+
+    [SupplyParameterFromQuery]
+    public string? email { get; set; }
+
+    [SupplyParameterFromQuery]
+    public string? token { get; set; }
+
+    private string message = "";
+    protected override async Task OnInitializedAsync()
+    {
+        var isConfirmed = await authService.ConfirmAccountAsync(username, email, token);
+        if (isConfirmed)
+        {
+            message = "Email confirmed successfully. you can now log in.";
+        }
+        else
+        {
+            message = $"Invalid or expired confirmation token.";
+        }
+    }
+}

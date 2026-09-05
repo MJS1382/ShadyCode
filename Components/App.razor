@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Components.Authorization
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -15,9 +16,11 @@
     <HeadOutlet />
 </head>
 
-<body>
+<body data-bs-theme="dark">
     <main id="main-content">
-        <Routes />
+        <CascadingAuthenticationState>
+            <Routes />
+        </CascadingAuthenticationState>
         <ReconnectModal />
         <script src="@Assets["_framework/blazor.web.js"]"></script>
         <script src="/bootstrap-dist/js/bootstrap.bundle.min.js"></script>
