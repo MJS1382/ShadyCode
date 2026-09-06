@@ -71,15 +71,12 @@
         </div>
     </NotAuthorized>
     <Authorized>
-        You are currently logged in as @errorMessage.
+        <p class="text-center mt-3">You are currently logged in.</p>
     </Authorized>
 </AuthorizeView>
 
 
 @code {
-    [CascadingParameter]
-    public required HttpContext httpContext { get; set; }
-
     [SupplyParameterFromForm]
     public required RegisterInputModel registerModel { get; set; }
 
@@ -90,8 +87,8 @@
     {
         registerModel = new();
 
-        if (authService.GetCurrentUser() is ApplicationUser user && user is not null)
-            errorMessage = user.UserName;
+        @* if (authService.GetCurrentUser() is ApplicationUser user && user is not null)
+            errorMessage = user.UserName; *@
     }
     
     private async Task HandleValidSubmit()

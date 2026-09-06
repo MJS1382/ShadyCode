@@ -1,0 +1,117 @@
+@page "/auth/login"
+
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authentication.Cookies
+@using Microsoft.AspNetCore.Components.Authorization
+@using PersonalBlog.Models
+@using System.Security.Claims
+@using PersonalBlog.Services.Auth
+
+@inject IAuthService authService
+@inject NavigationManager navigationManager
+@inject IHttpContextAccessor httpContextAccessor
+
+<AuthorizeView>
+    <NotAuthorized>
+        <div class="text-center">
+            <div class="d-flex flex-column justify-content-center align-items-center p-2 m-2">
+                <h3 class="my-4">Login</h3>
+
+                <EditForm FormName="LoginForm" Model="authInputModel" OnValidSubmit="HandleValidSubmit" Context="idk">
+                    <DataAnnotationsValidator />
+                    @* <ValidationSummary /> *@
+                    <div>
+                        <p class="text-danger">@errorMessage</p>
+                        @if (success) {
+                            <p class="text-success">• login was successful! Welcome :)</p>
+                        }
+                    </div>
+
+                    <div style="max-width: 500px; background-color: #1e2122; padding: 20px; border-radius: 10px;">
+                        <div class="row d-flex align-items-center mb-3">
+                            <label for="email" class="form-label col-sm-3 mb-sm-0">Email</label>
+                            <div class="col-sm-9">
+                                <InputText id="email" type="email" class="form-control" @bind-Value="authInputModel.Email" />
+                            </div>
+                            <ValidationMessage For="@(() => authInputModel.Email)" class="d-inline text-danger ms-sm-5 my-1" />
+                        </div>
+
+                        <div class="row d-flex align-items-center mb-3">
+                            <label for="password" class="form-label col-sm-3 mb-sm-0">Password</label>
+                            <div class="col-sm-9">
+                                <InputText id="password" type="password" class="form-control" @bind-Value="authInputModel.Password" />
+                            </div>
+                            <ValidationMessage For="@(() => authInputModel.Password)" class="d-inline text-danger ms-sm-5 my-1" />
+                        </div>
+
+                        <div class="d-inline mb-3">
+                            <InputCheckbox id="IsOptIn" class="form-controll" @bind-Value="authInputModel.RememberMe"/>
+                            <p class="d-inline">Remember me</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <p class="d-inline">Havn't registered yet ?</p>
+                        <NavLink href="/auth/register" class="d-inline">Register</NavLink>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Login</button>
+                </EditForm>
+            </div>
+        </div>
+    </NotAuthorized>
+    <Authorized>
+        <p class="text-center mt-3">You are currently logged in.</p>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    [SupplyParameterFromForm]
+    public required AuthenticationInputModel authInputModel { get; set; }
+    private string? errorMessage;
+    private bool success;
+
+    protected override void OnInitialized()
+    {
+        authInputModel ??= new();
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (string.IsNullOrEmpty(authInputModel.Email) || string.IsNullOrEmpty(authInputModel.Password) || httpContextAccessor.HttpContext is null)
+            return;
+
+        var user = await authService.AuthenticateAsync(authInputModel.Email, authInputModel.Password);
+
+        if (user is null)
+        {
+            errorMessage = "Invalid email / password";
+            return;
+        }
+
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Name, user.UserName),
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim("RegistrationConfirmed", user.RegistrationConfirmed.ToString()),
+            new Claim("SecurityStamp", user.SecurityStamp.ToString())
+        };
+
+        foreach (var role in user.Roles)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, role.Name));
+        }
+
+        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+        await httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal,
+            new AuthenticationProperties
+        {
+            IsPersistent = authInputModel.RememberMe,
+            ExpiresUtc = DateTimeOffset.UtcNow.AddDays(30),
+        });
+
+        navigationManager.NavigateTo("/", true);
+    }
+}

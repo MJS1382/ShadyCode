@@ -96,16 +96,18 @@ public sealed class AuthService(
 
     public async Task<ApplicationUser?> AuthenticateAsync(string email, string password)
     {
-        var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+        var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
 
         if (user is null) return null;
-        if (user.RegistrationConfirmed) return null;
+        if (!user.RegistrationConfirmed) return null;
         
         var storedPasswordHash = user.PasswordHash;
         var verificationResult = BCrypt.Net.BCrypt.EnhancedVerify(password, storedPasswordHash, BCrypt.Net.HashType.SHA256);
 
         if (!verificationResult) return null;
 
+        user.SecurityStamp = Guid.NewGuid();
+        await dbContext.SaveChangesAsync();
         return user;
     }
 

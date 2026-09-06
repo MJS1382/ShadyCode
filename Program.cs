@@ -12,12 +12,21 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    {
-        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
-        options.EnableSensitiveDataLogging();
-    });
+{
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme);
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+{
+    options.Cookie.Name = "auth";
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+    options.Cookie.SameSite = SameSiteMode.Lax;
+    options.LoginPath = "/auth/login";
+    options.LogoutPath = "/auth/logout";
+    options.AccessDeniedPath = "/auth/forbidden";
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+});
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddAuthorization();
 

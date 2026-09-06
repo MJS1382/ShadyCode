@@ -78,3 +78,4 @@ appsettings.Development.local.json
 obj/Debug/net10.0/PersonalBlog.AssemblyInfoInputs.cache
 obj/Debug/net10.0/PersonalBlog.AssemblyInfo.cs
 appsettings.Development.json
+appsettings.Development.json
