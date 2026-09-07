@@ -13,6 +13,14 @@ public class ApplicationDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<ApplicationUser>()
+            .HasIndex(x => x.UserName)
+            .IsUnique();
+
+        modelBuilder.Entity<ApplicationUser>()
+            .HasIndex(x => x.Email)
+            .IsUnique();
     }
 
     public DbSet<ApplicationUser> Users { get; set; }

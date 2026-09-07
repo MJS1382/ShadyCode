@@ -7,6 +7,10 @@ public sealed class RegisterInputModel
 {
     [Required(ErrorMessage = "Username is required.")]
     [StringLength(64, MinimumLength = 3, ErrorMessage = "Username must be between 3 and 64 characters.")]
+    [RegularExpression(
+        @"^[a-zA-Z0-9](?:[a-zA-Z0-9_]*[a-zA-Z0-9])?$",
+        ErrorMessage = "Username can only contain letters, numbers, and underscores in the middle."
+    )]
     public string? UserName { get; set; }
 
     [Required(ErrorMessage = "Email is required.")]

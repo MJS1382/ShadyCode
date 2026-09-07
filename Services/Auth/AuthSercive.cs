@@ -17,17 +17,17 @@ public sealed class AuthService(
         if (input is null || input.Email is null || input.UserName is null || input.Password is null)
             return RegisterResult.InvalidInput;
 
-        if(await dbContext.Users.AnyAsync(u => u.Email == input.Email && u.RegistrationConfirmed))
+        if(await dbContext.Users.AnyAsync(u => u.Email == input.Email.Trim().ToLowerInvariant() && u.RegistrationConfirmed))
             return RegisterResult.EmailAlreadyExists;
 
-        if(await dbContext.Users.AnyAsync(u => u.UserName == input.UserName))
+        if(await dbContext.Users.AnyAsync(u => u.UserName == input.UserName.Trim().ToLowerInvariant()))
             return RegisterResult.UserNameAlreadyExists;
 
         var user = new ApplicationUser
         {
             Id = Guid.NewGuid(),
-            UserName = input.UserName!,
-            Email = input.Email!,
+            UserName = input.UserName!.Trim().ToLowerInvariant(),
+            Email = input.Email!.Trim().ToLowerInvariant(),
             RegisteredAt = DateTime.UtcNow,
             PasswordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(input.Password, 12, BCrypt.Net.HashType.SHA256),
             IsOptInForNotifications = !input.IsOptInForNotifications,
@@ -77,14 +77,12 @@ public sealed class AuthService(
             return false;
         }
 
-        var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+        var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == email.Trim().ToLowerInvariant());
         if (user == null) return false;
 
         if (emailVerificationTokenService.ValidateToken(confirmationToken, user.Id, out Guid verifiedUserId)
             && !user.RegistrationConfirmed)
         {
-            user.UserName= username;
-            user.Email = email;
             user.RegistrationConfirmed = true;
             user.SecurityStamp = Guid.NewGuid();
             await dbContext.SaveChangesAsync();
