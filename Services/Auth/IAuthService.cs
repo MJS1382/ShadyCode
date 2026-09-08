@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Components.Authorization;
 using PersonalBlog.Models;
 
 namespace PersonalBlog.Services.Auth;
@@ -8,7 +9,7 @@ public interface IAuthService
     Task<ApplicationUser?> AuthenticateAsync(string email, string password);
     Task<bool> ConfirmAccountAsync(string? username, string? email, string? confirmationToken);
     Task<bool> IsAccountConfirmedAsync();
-    ApplicationUser? GetCurrentUser();
+    Task<ApplicationUser?> GetCurrentUser(AuthenticationStateProvider authStateProvider);
 
     // Task<ApplicationUser?> GetUserByEmailAsync(string email);
     // Task<ApplicationUser?> GetUserByIdAsync(Guid userId);

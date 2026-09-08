@@ -1,0 +1,60 @@
+@page "/account"
+@using Microsoft.AspNetCore.Components.Authorization
+@using PersonalBlog.Services.Auth
+@using PersonalBlog.Models
+@inject AuthenticationStateProvider authenticationStateProvider
+@inject NavigationManager navigationManager
+@inject IAuthService authService
+
+<AuthorizeView>
+    <Authorized>
+        <div class="d-flex flex-column align-items-center text-canter mt-5">
+            <h3>Your Account Information</h3>
+            <ul class="list-group list-group-flush my-3">
+                <li class="list-group-item">Username: @(UserInformation.Username ?? "Loading...")</li>
+                <li class="list-group-item">Email: @(UserInformation.Email ?? "Loading...")</li>
+                <li class="list-group-item">Registration Date: @(UserInformation.RegistrationDate ?? "Loading...")</li>
+                <li class="list-group-item">IQ test result: @(UserInformation.IQ ?? "Loading...")</li>
+            </ul>
+            <NavLink href="/auth/logout">
+                <button class="btn btn-danger">Logout</button>
+            </NavLink>
+        </div>
+    </Authorized>
+
+    <NotAuthorized>
+        <p class="text-center mt-3 text-danger">Not authorized</p>
+        @{
+            Task.Delay(500);
+            navigationManager.NavigateTo("/access-denied");
+        }
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    public required UserAreaInformationModel UserInformation { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var res = await authService.GetCurrentUser(authenticationStateProvider);
+        if (res is null || res.UserName is null)
+        {
+            navigationManager.NavigateTo("/access-denied");
+            return;
+        }
+
+        UserInformation = new() {
+            Username = res.UserName,
+            Email = res.Email,
+            RegistrationDate = res.RegisteredAt.Date.ToString()
+        };
+    }
+
+    public class UserAreaInformationModel {
+        public string? Username { get; set; }
+        public string? Email { get; set; }
+        public string? RegistrationDate { get; set; }
+
+        public string? IQ { get; set; } = Random.Shared.Next(20, 200).ToString();
+    }
+}

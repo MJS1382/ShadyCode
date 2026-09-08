@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
 using PersonalBlog.Data;
@@ -109,12 +111,15 @@ public sealed class AuthService(
         return user;
     }
 
-    public ApplicationUser? GetCurrentUser()
+    public async Task<ApplicationUser?> GetCurrentUser(AuthenticationStateProvider authStateProvider)
     {
-        var userIdClaim = httpContextAccessor.HttpContext!.User.Claims.FirstOrDefault(c => c.Type == "UserId");
-        if (userIdClaim == null) return null;
+        var authState = await authStateProvider.GetAuthenticationStateAsync();
+        var usernameClaim = authState.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name);
+        if (usernameClaim == null) return null;
 
-        var user = dbContext.Users.FirstOrDefault(u => u.Id.ToString() == userIdClaim!.Value);
+        var user = await dbContext.Users.FirstOrDefaultAsync(u => u.UserName == usernameClaim!.Value);
+        user!.PasswordHash = string.Empty;
+        user!.Id = Guid.AllBitsSet;
         return user;
     }
 

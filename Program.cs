@@ -24,7 +24,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     options.Cookie.SameSite = SameSiteMode.Lax;
     options.LoginPath = "/auth/login";
     options.LogoutPath = "/auth/logout";
-    options.AccessDeniedPath = "/auth/forbidden";
+    options.AccessDeniedPath = "/access-denied";
     options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
 });
 builder.Services.AddCascadingAuthenticationState();
