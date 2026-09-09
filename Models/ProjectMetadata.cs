@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
+namespace PersonalBlog.Models;
+
 public class ProjectMetadata
 {
     public Guid Id { get; set; }

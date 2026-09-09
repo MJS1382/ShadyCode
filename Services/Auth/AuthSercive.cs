@@ -96,7 +96,9 @@ public sealed class AuthService(
 
     public async Task<ApplicationUser?> AuthenticateAsync(string email, string password)
     {
-        var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
+        var user = await dbContext.Users
+            .Include(u => u.Roles)
+            .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
 
         if (user is null) return null;
         if (!user.RegistrationConfirmed) return null;
@@ -111,15 +113,20 @@ public sealed class AuthService(
         return user;
     }
 
-    public async Task<ApplicationUser?> GetCurrentUser(AuthenticationStateProvider authStateProvider)
+    public async Task<ApplicationUser?> GetCurrentUser(AuthenticationStateProvider authStateProvider, bool includePosts = false)
     {
         var authState = await authStateProvider.GetAuthenticationStateAsync();
         var usernameClaim = authState.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name);
         if (usernameClaim == null) return null;
 
-        var user = await dbContext.Users.FirstOrDefaultAsync(u => u.UserName == usernameClaim!.Value);
+        var user = includePosts 
+            ? await dbContext.Users
+                .Include(u => u.Posts)
+                .FirstOrDefaultAsync(u => u.UserName == usernameClaim!.Value)
+            : await dbContext.Users
+                .FirstOrDefaultAsync(u => u.UserName == usernameClaim!.Value);
+                
         user!.PasswordHash = string.Empty;
-        user!.Id = Guid.AllBitsSet;
         return user;
     }
 

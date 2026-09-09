@@ -22,9 +22,6 @@
                     @* <ValidationSummary /> *@
                     <div>
                         <p class="text-danger">@errorMessage</p>
-                        @if (success) {
-                            <p class="text-success">• login was successful! Welcome :)</p>
-                        }
                     </div>
 
                     <div style="max-width: 500px; background-color: #1e2122; padding: 20px; border-radius: 10px;">
@@ -68,7 +65,6 @@
     [SupplyParameterFromForm]
     public required AuthenticationInputModel authInputModel { get; set; }
     private string? errorMessage;
-    private bool success;
 
     protected override void OnInitialized()
     {

@@ -1,0 +1,81 @@
+@page "/manage"
+@rendermode InteractiveServer
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using PersonalBlog.Models
+@using PersonalBlog.Data
+@attribute [Authorize(policy: "AdminOnly")]
+@inject NavigationManager navigationManager
+@inject ApplicationDbContext dbContext
+
+<div class="d-flex flex-column align-items-center m-5 text-light">
+    <h3 class="mb-5">Management Dashboard</h3>
+    <div class="grid">
+        <QuickGrid Items="@FilteredItems" Pagination="@pagination" Class="text-center" theme="gg">
+            <PropertyColumn Property="@(c => c.Title)" Sortable="true" Class="Post Title">
+                <ColumnOptions>
+                    <div class="from-control">
+                        <input type="search" autofocus @bind="titleFilter" @bind:event="oninput" placeholder="Country name..." />
+                    </div>
+                </ColumnOptions>
+            </PropertyColumn>
+            <PropertyColumn Property="@(c => c.Author.UserName)" Title="Author" Sortable="true" Align="Align.Right" />
+            <PropertyColumn Property="@(c => c.ViewCount)" Sortable="true" Align="Align.Right" />
+            <PropertyColumn Property="@(c => c.PublishDate)" Sortable="true" Align="Align.Right" />
+            <TemplateColumn Title="Actions">
+                <div class="p-3">
+                    <button class="btn btn-primary" @onclick="() => View(context)">Publish</button>
+                    <button class="btn btn-primary" @onclick="() => View(context)">View</button>
+                    <button class="btn btn-primary" @onclick="() => Edit(context)">Edit</button>
+                    <button class="btn btn-primary btn-danger" @onclick="OpenRemoveConfirmationModal">Remove</button>
+                </div>
+            </TemplateColumn>
+        </QuickGrid>
+    </div>
+
+    <div class="pp">
+        <Paginator State="@pagination"/>
+    </div>
+
+    <div>
+        <NavLink class="nav-link" href="/manage/edit">
+            <button class="btn btn-success mt-5">New Post</button>
+        </NavLink>
+    </div>
+</div>
+
+@code {
+    List<Post>? posts;
+    PaginationState pagination = new PaginationState { ItemsPerPage = 15 };
+    string titleFilter = string.Empty;
+    IQueryable<Post>? FilteredItems => posts?
+        .Where(p => p.Title.Contains(titleFilter, StringComparison.CurrentCultureIgnoreCase))
+        .AsQueryable();
+    GridSort<Post> dateSort = GridSort<Post>
+        .ByDescending(p => p.PublishDate)
+        .ThenAscending(p => p.Title);
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        posts = dbContext.Posts
+            .Include(p => p.Author)
+            .Take(pagination.ItemsPerPage)
+            .ToList();
+    }
+
+    void OpenRemoveConfirmationModal()
+    {
+        
+    }
+
+    async Task RemovePostAsync()
+    {
+
+    }
+
+    void Edit(Post p) => navigationManager.NavigateTo($"/manage/edit/{p.Id}");
+
+    void View(Post p) => navigationManager.NavigateTo($"/view/{p.Id}");
+}

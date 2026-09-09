@@ -1,0 +1,23 @@
+::deep .quickgrid[theme=gg] .col-justify-right {
+    text-align: center;
+}
+
+::deep .quickgrid[theme=gg] .col-title {
+    justify-content: center;
+}
+
+::deep thead .country-name { width: 15rem; }
+
+/* Stop country name text from wrapping, and truncate with ellipsis */
+::deep tbody .country-name {
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 0;
+    text-overflow: ellipsis;
+}
+
+/* Stop the last page from collapsing to the number of rows on it */
+::deep tr { height: 1.8rem; }
+
+/* Subtle stripe effect */
+::deep tr:nth-child(even) { background: #1e2122; }

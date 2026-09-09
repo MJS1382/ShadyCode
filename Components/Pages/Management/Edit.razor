@@ -1,0 +1,144 @@
+@page "/manage/edit/{Id?}"
+@rendermode InteractiveServer 
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.EntityFrameworkCore
+@using HugeRTE.Blazor
+@using PersonalBlog.Services.Auth
+@using PersonalBlog.Models
+@using PersonalBlog.Data
+
+@inject AuthenticationStateProvider authenticationStateProvider
+@inject ApplicationDbContext dbContext
+@inject IAuthService authService
+
+<div class="mt-5">
+    <p class="text-center @(message.Style)">@message.text</p>
+    <div class="">
+        <Editor 
+            Id="editor"
+            Conf="@editorConfiguration"
+            @bind-Value="content"
+        />
+    </div>
+    <div class="container text-center mt-3">
+        <EditForm FormName="Post" Model="@postInput" OnValidSubmit="SavePostAsync">
+            <div class="d-flex align-items-center justify-content-center w-20 mb-2">
+                <DataAnnotationsValidator/>
+                <ValidationSummary/>
+            </div>
+            <div class="row d-flex justify-content-center">
+                <div class="col-3">
+                    <InputText id="title" placeholder="Title" class="form-control" @bind-Value="postInput!.Title"/>
+                    <InputText placeholder="Slug" class="form-control mt-3" @bind-Value="postInput!.Slug"/>
+                </div>
+                <div class="col-3">
+                    <InputText placeholder="Tags (separated by ;)" class="form-control" @bind-Value="postInput!.Tags"/>
+                    <InputText placeholder="Estimated reading time" class="form-control mt-3" @bind-Value="postInput.ReadTimeSeconds"/>
+                </div>
+            </div>
+            <div class="row d-flex justify-content-center">
+                <div class="col-6">
+                    <InputText type="url" placeholder="Thumbnail path" class="form-control mt-3" @bind-Value="postInput.ThumbnailPath"/>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success mt-3">Save</button>
+        </EditForm>
+    </div>
+
+</div>
+
+@code {
+    [SupplyParameterFromQuery] [Parameter]
+    public string? Id { get; set; }
+
+    public EditorInputModel? postInput { get; set; } = new();
+
+    [PersistentState]
+    public string? content { get; set; }
+    Post? post;
+    //bool isEditMode;
+    Message message;
+    
+    private Dictionary<string, object> editorConfiguration = new Dictionary<string, object>()
+    {  
+        {"height", 600},
+        { "plugins", "lists link image code advlist anchor autolink autosave charmap codesample directionality emoticons fullscreen help importcss TODO" }
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrEmpty(Id)) 
+        {
+            if (!Guid.TryParse(Id, out Guid userId))
+            {
+                message = new Message("Invalid Parameters", "text-danger");
+                return;
+            }
+            post = await dbContext.Posts
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.Id == userId);
+            //isEditMode = res is not null ? true : false;
+            //content = isEditMode ? res!.Content : "Hello World!";
+            if (post is not null)
+            {
+                postInput = new() {
+                    Title = post.Title,
+                    Slug = post.Slug,
+                    Tags = post.Tags,
+                    ReadTimeSeconds = post.ReadTimeSeconds.ToString(),
+                    ThumbnailPath = post.ThumbnailPath
+                };
+                content = post.Content;
+            }
+            else 
+            {
+                message = new Message("Invalid Parameters", "text-danger");
+            }
+        }
+    }
+
+    async Task SavePostAsync()
+    {
+        var user = await authService.GetCurrentUser(authenticationStateProvider, true);
+        if (user is null || postInput is null || !Guid.TryParse(Id, out Guid userId)) return;
+
+        if (post is null)
+        {
+            var newPost = new Post {
+                Title = postInput!.Title ?? "New Post",
+                Slug = postInput!.Slug ?? "New Post",
+                Tags = postInput.Tags ?? "",
+                ThumbnailPath = postInput.ThumbnailPath!,
+                ReadTimeSeconds = int.Parse(postInput.ReadTimeSeconds!),
+                Content = content ?? "",
+                //PublishDate = DateTime.UtcNow,
+            };
+            user.Posts.Add(newPost);
+
+            post = newPost;
+
+            await dbContext.SaveChangesAsync();
+            await Task.Delay(500);
+        }
+        else 
+        {
+            var existingPost = await dbContext.Posts.FirstOrDefaultAsync(p => p.Id == userId);
+
+            existingPost!.Title = postInput.Title!;
+            existingPost.Slug = postInput.Slug!;
+            existingPost.Tags = postInput.Tags!;
+            existingPost.ReadTimeSeconds = int.Parse(postInput.ReadTimeSeconds!);
+            existingPost.ThumbnailPath = postInput.ThumbnailPath!;
+            existingPost.Content = content ?? "";
+
+            await dbContext.SaveChangesAsync();
+            await Task.Delay(500);
+        }
+
+        message = new Message("Saved!", "text-success");
+    }
+
+    record struct Message(string text, string Style);
+}

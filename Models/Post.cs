@@ -2,6 +2,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using PersonalBlog.Models;
 
+namespace PersonalBlog.Models;
+
 public sealed class Post
 {
     public Guid Id { get; set; }
@@ -22,5 +24,5 @@ public sealed class Post
     public int ReadTimeSeconds { get; set; }
     public DateTime PublishDate { get; set; }
     public List<Comment> Comments { get; set; } = new();
-    public ProjectMetadata ProjectMetadata { get; set; } = new();
+    public ProjectMetadata? ProjectMetadata { get; set; }
 }

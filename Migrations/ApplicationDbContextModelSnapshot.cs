@@ -34,7 +34,7 @@ namespace PersonalBlog.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("ApplicationUserRole");
+                    b.ToTable("ApplicationUserRole", (string)null);
                 });
 
             modelBuilder.Entity("Comment", b =>
@@ -66,7 +66,7 @@ namespace PersonalBlog.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("Comment");
+                    b.ToTable("Comment", (string)null);
                 });
 
             modelBuilder.Entity("PersonalBlog.Models.ApplicationUser", b =>
@@ -110,7 +110,7 @@ namespace PersonalBlog.Migrations
                     b.HasIndex("UserName")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Post", b =>
@@ -162,7 +162,7 @@ namespace PersonalBlog.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.ToTable("Posts");
+                    b.ToTable("Posts", (string)null);
                 });
 
             modelBuilder.Entity("ProjectMetadata", b =>
@@ -207,7 +207,7 @@ namespace PersonalBlog.Migrations
                     b.HasIndex("PostId")
                         .IsUnique();
 
-                    b.ToTable("ProjectsMetadata");
+                    b.ToTable("ProjectsMetadata", (string)null);
                 });
 
             modelBuilder.Entity("Role", b =>
@@ -225,7 +225,7 @@ namespace PersonalBlog.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Role");
+                    b.ToTable("Role", (string)null);
                 });
 
             modelBuilder.Entity("ApplicationUserRole", b =>

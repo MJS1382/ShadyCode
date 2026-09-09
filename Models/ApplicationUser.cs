@@ -14,6 +14,7 @@ public class ApplicationUser
     public bool IsOptInForNotifications { get; set; }
     public bool RegistrationConfirmed { get; set; }
     public List<Role> Roles { get; set; } = new(); //nav property
+    public List<Post> Posts { get; set; } = new();
     public DateTime RegisteredAt { get; set; } = DateTime.UtcNow;
     public Guid SecurityStamp { get; set; }
 }

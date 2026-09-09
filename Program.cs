@@ -4,6 +4,7 @@ using PersonalBlog.Data;
 using PersonalBlog.Services;
 using PersonalBlog.Components;
 using PersonalBlog.Services.Auth;
+using Microsoft.AspNetCore.Components.QuickGrid.EntityFrameworkAdapter;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,12 @@ builder.Services.AddRazorComponents()
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+    
+    if (builder.Environment.IsDevelopment())
+    {
+        options.EnableSensitiveDataLogging();
+        options.EnableDetailedErrors();
+    }
 });
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
@@ -28,9 +35,15 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
 });
 builder.Services.AddCascadingAuthenticationState();
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(
+    options => {
+        options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+    }
+);
 
 builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddQuickGridEntityFrameworkAdapter();
 
 builder.Services.AddScoped<IEmailVerificationTokenService, EmailVerificationTokenService>();
 
