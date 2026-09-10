@@ -42,7 +42,27 @@ body {
 }
 
 #main-content {
+    display: block;
     width: 100%;
     max-width: 1400px;
     margin: 0 auto;
+}
+
+.fade-message {
+    animation: fadeOut 5s forwards;
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+
+    80% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        display: none;
+    }
 }

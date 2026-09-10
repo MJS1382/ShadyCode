@@ -13,7 +13,10 @@
 @inject IAuthService authService
 
 <div class="mt-5">
-    <p class="text-center @(message.Style)">@message.text</p>
+    @if (message is not null)
+    {
+        <p class="text-center fade-message @message.Value.Style" @key="message.Value.Key">@message.Value.Text</p>
+    }
     <div class="">
         <Editor 
             Id="editor"
@@ -59,7 +62,8 @@
     public string? content { get; set; }
     Post? post;
     //bool isEditMode;
-    Message message;
+    Message? message;
+    int messageKey;
     
     private Dictionary<string, object> editorConfiguration = new Dictionary<string, object>()
     {  
@@ -73,7 +77,7 @@
         {
             if (!Guid.TryParse(Id, out Guid userId))
             {
-                message = new Message("Invalid Parameters", "text-danger");
+                ShowMessage("Invalid Parameters", "text-danger");
                 return;
             }
             post = await dbContext.Posts
@@ -94,7 +98,7 @@
             }
             else 
             {
-                message = new Message("Invalid Parameters", "text-danger");
+                ShowMessage("Invalid Parameters", "text-danger");
             }
         }
     }
@@ -102,7 +106,7 @@
     async Task SavePostAsync()
     {
         var user = await authService.GetCurrentUser(authenticationStateProvider, true);
-        if (user is null || postInput is null || !Guid.TryParse(Id, out Guid userId)) return;
+        if (user is null || postInput is null) return;
 
         if (post is null)
         {
@@ -124,9 +128,10 @@
         }
         else 
         {
-            var existingPost = await dbContext.Posts.FirstOrDefaultAsync(p => p.Id == userId);
+            var existingPost = await dbContext.Posts.FirstOrDefaultAsync(p => p.Id == post.Id);
+            if (existingPost is null) return;
 
-            existingPost!.Title = postInput.Title!;
+            existingPost.Title = postInput.Title!;
             existingPost.Slug = postInput.Slug!;
             existingPost.Tags = postInput.Tags!;
             existingPost.ReadTimeSeconds = int.Parse(postInput.ReadTimeSeconds!);
@@ -137,8 +142,13 @@
             await Task.Delay(500);
         }
 
-        message = new Message("Saved!", "text-success");
+        ShowMessage("Saved!", "text-success");
     }
 
-    record struct Message(string text, string Style);
+    void ShowMessage(string text, string style)
+    {
+        message = new Message(text, style, ++messageKey);
+    }
+
+    record struct Message(string Text, string Style, int Key);
 }

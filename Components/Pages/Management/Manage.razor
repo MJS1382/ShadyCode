@@ -8,11 +8,13 @@
 @attribute [Authorize(policy: "AdminOnly")]
 @inject NavigationManager navigationManager
 @inject ApplicationDbContext dbContext
+@inject IJSRuntime JS
 
 <div class="d-flex flex-column align-items-center m-5 text-light">
+    <p class="text-center @(message.Item2)">@message.Item1</p>
     <h3 class="mb-5">Management Dashboard</h3>
     <div class="grid">
-        <QuickGrid Items="@FilteredItems" Pagination="@pagination" Class="text-center" theme="gg">
+        <QuickGrid Items="@FilteredItems" Pagination="@pagination" Class="text-center" @ref="quickGrid" theme="gg">
             <PropertyColumn Property="@(c => c.Title)" Sortable="true" Class="Post Title">
                 <ColumnOptions>
                     <div class="from-control">
@@ -25,10 +27,10 @@
             <PropertyColumn Property="@(c => c.PublishDate)" Sortable="true" Align="Align.Right" />
             <TemplateColumn Title="Actions">
                 <div class="p-3">
-                    <button class="btn btn-primary" @onclick="() => View(context)">Publish</button>
+                    <button class="btn btn-primary" @onclick="() => Publish(context)">Publish</button>
                     <button class="btn btn-primary" @onclick="() => View(context)">View</button>
                     <button class="btn btn-primary" @onclick="() => Edit(context)">Edit</button>
-                    <button class="btn btn-primary btn-danger" @onclick="OpenRemoveConfirmationModal">Remove</button>
+                    <button class="btn btn-primary btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop" @onclick="() => OpenRemoveConfirmationModal(context)">Remove</button>
                 </div>
             </TemplateColumn>
         </QuickGrid>
@@ -45,10 +47,30 @@
     </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-body-secondary">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body bg-body-secondary">
+        <p class="@message.Item2">@message.Item1 Are you sure ?</p>
+      </div>
+      <div class="modal-footer bg-body-secondary">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="ClearMessage">Cancel</button>
+        <button type="button" class="btn btn-danger" @onclick="RemovePostAsync">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 @code {
     List<Post>? posts;
-    PaginationState pagination = new PaginationState { ItemsPerPage = 15 };
+    PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
     string titleFilter = string.Empty;
+    QuickGrid<Post>? quickGrid;
     IQueryable<Post>? FilteredItems => posts?
         .Where(p => p.Title.Contains(titleFilter, StringComparison.CurrentCultureIgnoreCase))
         .AsQueryable();
@@ -56,26 +78,66 @@
         .ByDescending(p => p.PublishDate)
         .ThenAscending(p => p.Title);
 
+    Tuple<string, string> message = new Tuple<string, string>("", "");
+    
+    Post? removingPost = null;
+
 
     protected override async Task OnInitializedAsync()
     {
-        posts = dbContext.Posts
-            .Include(p => p.Author)
-            .Take(pagination.ItemsPerPage)
-            .ToList();
+        await LoadPostsAsync();
     }
 
-    void OpenRemoveConfirmationModal()
+    async Task LoadPostsAsync()
     {
-        
+        posts = await dbContext.Posts
+            .Include(p => p.Author)
+            .AsNoTracking()
+            .ToListAsync();
+    }
+
+    async Task Publish(Post post)
+    {
+        var res = await dbContext.Posts.FirstOrDefaultAsync(p => p.Id == post.Id);
+        if (res is null) return;
+        if (res.PublishDate > DateTime.MinValue) 
+        {
+            message = new ("• The post is already published", "text-danger");
+            return;
+        }
+
+        message = new ("• Published Successfully", "text-success");
+        res.PublishDate = DateTime.UtcNow;
+        await dbContext.SaveChangesAsync();
+        await LoadPostsAsync();
+        await quickGrid!.RefreshDataAsync();
     }
 
     async Task RemovePostAsync()
     {
+        if (removingPost is null) return;
+        var postId = removingPost.Id;
+        var removedSlug = removingPost.Slug;
+        var postToRemove = await dbContext.Posts.FirstOrDefaultAsync(p => p.Id == postId);
+        if (postToRemove is null) return;
 
+        dbContext.Posts.Remove(postToRemove);
+        await dbContext.SaveChangesAsync();
+
+        await JS.InvokeVoidAsync("hideBootstrapModal", "#staticBackdrop");
+        message = new($"{removedSlug} was removed", "text-success");
+        removingPost = null;
+        await LoadPostsAsync();
+        await quickGrid!.RefreshDataAsync();
     }
+
+    void OpenRemoveConfirmationModal(Post p){
+        message = new($"You are deleting {p.Title}", "text-center");
+        removingPost = p;
+    } 
 
     void Edit(Post p) => navigationManager.NavigateTo($"/manage/edit/{p.Id}");
 
-    void View(Post p) => navigationManager.NavigateTo($"/view/{p.Id}");
+    void View(Post p) => navigationManager.NavigateTo($"/view/{p.Slug}");
+    void ClearMessage() => message = new("", "");
 }

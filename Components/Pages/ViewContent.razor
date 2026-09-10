@@ -1,0 +1,30 @@
+@page "/view/{slug}"
+@using Microsoft.EntityFrameworkCore
+@using PersonalBlog.Data
+@inject ApplicationDbContext DbContext
+@inject NavigationManager navigationManager
+
+<div class="text-center mx-2 m-sm-5 mt-3">
+    <div class="d-flex flex-column justify-content-center align-items-center">
+        @((MarkupString)content!)
+    </div>
+</div>
+
+@code {
+    [Parameter] [SupplyParameterFromQuery]
+    public string? slug { get; set; }
+
+    string? content;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var res = DbContext.Posts.FirstOrDefault(p => p.Slug == slug);
+        if (res is null)
+        {
+            navigationManager.NavigateTo("/not-found");
+            return;
+        }
+
+        content = res.Content;
+    }
+}
