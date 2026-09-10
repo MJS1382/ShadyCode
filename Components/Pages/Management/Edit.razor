@@ -1,13 +1,13 @@
 @page "/manage/edit/{Id?}"
-@rendermode InteractiveServer 
-@using System.Security.Claims
+@rendermode InteractiveServer
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.EntityFrameworkCore
 @using HugeRTE.Blazor
 @using PersonalBlog.Services.Auth
 @using PersonalBlog.Models
 @using PersonalBlog.Data
-
+@attribute [Authorize(policy: "AdminOnly")]
 @inject AuthenticationStateProvider authenticationStateProvider
 @inject ApplicationDbContext dbContext
 @inject IAuthService authService
