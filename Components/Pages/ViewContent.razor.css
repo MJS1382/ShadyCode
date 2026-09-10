@@ -1,5 +1,5 @@
 ::deep img {
     max-width: 100%;
     max-height: 100%;
-    object-fit: none;
+    object-fit: scale-down;
 }

@@ -126,7 +126,6 @@ public sealed class AuthService(
             : await dbContext.Users
                 .FirstOrDefaultAsync(u => u.UserName == usernameClaim!.Value);
                 
-        user!.PasswordHash = string.Empty;
         return user;
     }
 

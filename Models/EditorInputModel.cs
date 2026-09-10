@@ -18,6 +18,6 @@ public sealed class EditorInputModel
     [Required(ErrorMessage = "The estimated time field is required.")] [IntegerOnly]
     public string? ReadTimeSeconds { get; set; }
 
-    [StringLength(128)]
+    [StringLength(256)]
     public string? ThumbnailPath { get; set; }
 }
