@@ -1,0 +1,21 @@
+.search-button {
+    border: none;
+    border-radius: 15px;
+    background-color: none;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+}
+
+.search-button:hover {
+    background-color: beige;
+}
+
+::deep p[style] {
+    text-align: start !important;
+}
+
+img{
+    object-fit: contain;
+    height: 100%;
+}

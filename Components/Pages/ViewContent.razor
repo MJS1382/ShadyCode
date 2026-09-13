@@ -1,11 +1,12 @@
 @page "/view/{slug}"
+@page "/blog/{slug}"
 @using Microsoft.EntityFrameworkCore
 @using PersonalBlog.Data
 @inject ApplicationDbContext DbContext
 @inject NavigationManager navigationManager
 
 <div class="text-center mx-2 m-sm-5 mt-3">
-    <div class="d-flex flex-column justify-content-center align-items-center">
+    <div class="content-container d-flex flex-column justify-content-center align-items-center">
         @((MarkupString)content!)
     </div>
 </div>
