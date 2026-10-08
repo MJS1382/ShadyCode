@@ -4,6 +4,49 @@
     object-fit: contain;
 }
 
+.content-end-marker {
+    display: block;
+    height: 1px;
+}
+
+.scroll-to-top {
+    position: fixed;
+    right: clamp(1rem, 3vw, 2rem);
+    bottom: clamp(1rem, 3vw, 2rem);
+    z-index: 1030;
+    display: inline-flex;
+    width: 3rem;
+    height: 3rem;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #198754;
+    border-radius: 50%;
+    background-color: #198754;
+    color: #fff;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.75rem);
+    transition: opacity 180ms ease, visibility 180ms ease, transform 180ms ease, background-color 180ms ease;
+    pointer-events: none;
+}
+
+.scroll-to-top.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.scroll-to-top:hover {
+    border-color: #0f5132;
+    background-color: #157347;
+}
+
+.scroll-to-top:focus-visible {
+    outline: 3px solid rgba(25, 135, 84, 0.45);
+    outline-offset: 3px;
+}
+
 .like-btn-container {
     border-radius: 5px;
     background-color: #615b5b;
@@ -76,7 +119,8 @@
 @media (prefers-reduced-motion: reduce) {
     .btn-like,
     .btn-like.is-animating,
-    .btn-like.is-animating i {
+    .btn-like.is-animating i,
+    .scroll-to-top {
         animation: none;
         transition: none;
     }

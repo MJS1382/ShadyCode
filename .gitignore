@@ -859,3 +859,4 @@ FodyWeavers.xsd
 appsettings.Development.json
 settings.json
 .[iI]dea/
+.[pP]rompts/

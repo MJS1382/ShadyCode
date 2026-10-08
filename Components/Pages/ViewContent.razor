@@ -11,7 +11,12 @@
     <div class="content-container d-flex flex-column justify-content-center align-items-center">
         @((MarkupString)content!)
     </div>
+    <span class="content-end-marker" data-article-end aria-hidden="true"></span>
 </div>
+
+<button class="scroll-to-top" data-scroll-to-top type="button" aria-label="Scroll to top" aria-hidden="true" tabindex="-1">
+    <i class="bi bi-arrow-up" aria-hidden="true"></i>
+</button>
 
 <div class="d-flex justify-content-center my-4">
     <div class="like-btn-container">
