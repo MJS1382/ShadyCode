@@ -23,6 +23,7 @@ public sealed class Post
     public int ViewCount { get; set; }
     public int ReadTimeSeconds { get; set; }
     public DateTime PublishDate { get; set; }
+    public List<ApplicationUser> LikedByUsers { get; set; } = new();
     public List<Comment> Comments { get; set; } = new();
     public ProjectMetadata? ProjectMetadata { get; set; }
 }

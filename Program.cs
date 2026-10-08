@@ -79,4 +79,7 @@ app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
+app.MapGroup("/api/blog")
+    .MapBlogEndpoints();
+
 app.Run();

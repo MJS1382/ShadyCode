@@ -1,13 +1,27 @@
 @page "/view/{slug}"
 @page "/blog/{slug}"
+@using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.EntityFrameworkCore
 @using PersonalBlog.Data
 @inject ApplicationDbContext DbContext
 @inject NavigationManager navigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <div class="text-center mx-2 m-sm-5 mt-3">
     <div class="content-container d-flex flex-column justify-content-center align-items-center">
         @((MarkupString)content!)
+    </div>
+</div>
+
+<div class="d-flex justify-content-center my-4">
+    <div class="like-btn-container">
+        <div>
+            <p class="mb-1">Smash this like button if you found this post useful.</p>
+        </div>
+        <button id="btn-like" class="btn btn-like py-2 @(isLiked ? "liked" : string.Empty)" data-post-id="@id" data-liked="@isLiked.ToString().ToLowerInvariant()">
+            <i class="bi @(isLiked ? "bi-hand-thumbs-up-fill" : "bi-hand-thumbs-up")"></i>
+        </button>
+        <span id="like-count">@initialLikeCount</span>
     </div>
 </div>
 
@@ -16,10 +30,16 @@
     public string? slug { get; set; }
 
     string? content;
+    string? id;
+    string? initialLikeCount;
+    bool isLiked;
 
     protected override async Task OnInitializedAsync()
     {
-        var res = DbContext.Posts.FirstOrDefault(p => p.Slug == slug);
+        var res = DbContext.Posts
+            .Include(p => p.LikedByUsers)
+            .FirstOrDefault(p => p.Slug == slug);
+
         if (res is null)
         {
             navigationManager.NavigateTo("/not-found");
@@ -27,5 +47,19 @@
         }
 
         content = res.Content;
+        id = res.Id.ToString();
+        initialLikeCount = res.LikedByUsers.Count.ToString();
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var username = authState.User.Identity?.Name;
+
+        if (!string.IsNullOrWhiteSpace(username))
+        {
+            var currentUser = await DbContext.Users.FirstOrDefaultAsync(u => u.UserName == username);
+            if (currentUser is not null)
+            {
+                isLiked = res.LikedByUsers.Any(u => u.Id == currentUser.Id);
+            }
+        }
     }
 }

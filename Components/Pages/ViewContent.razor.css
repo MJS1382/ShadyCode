@@ -4,6 +4,84 @@
     object-fit: contain;
 }
 
+.like-btn-container {
+    border-radius: 5px;
+    background-color: #615b5b;
+    padding: 10px;
+    max-width: 300px;
+}
+
+.btn-like {
+    border-radius: 30px;
+    background-color: #198754;
+    border: 1px solid #198754;
+    color: #fff;
+    transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+
+.btn-like:hover {
+    color: #fff;
+    background-color: #157347;
+    border-color: #0f5132;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(25, 135, 84, 0.18);
+}
+
+.btn-like.liked {
+    background-color: #198754;
+    border-color: #198754;
+    color: #fff;
+}
+
+.btn-like.is-animating {
+    animation: like-button-pop 460ms ease-out;
+}
+
+.btn-like:active {
+    transform: scale(0.9);
+    box-shadow: 0 0 0 0.35rem rgba(25, 135, 84, 0.28);
+}
+
+.btn-like.is-animating i {
+    display: inline-block;
+    animation: like-pop 420ms cubic-bezier(0.2, 0.8, 0.3, 1.4);
+}
+
+@keyframes like-button-pop {
+    30% {
+        transform: scale(0.9);
+    }
+
+    60% {
+        transform: scale(1.08);
+        box-shadow: 0 0 0 0.35rem rgba(25, 135, 84, 0.28);
+    }
+
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(25, 135, 84, 0);
+    }
+}
+
+@keyframes like-pop {
+    45% {
+        transform: translateY(-5px) rotate(-14deg) scale(1.35);
+    }
+
+    100% {
+        transform: translateY(0) rotate(0) scale(1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .btn-like,
+    .btn-like.is-animating,
+    .btn-like.is-animating i {
+        animation: none;
+        transition: none;
+    }
+}
+
 @media (min-width: 576px) 
 {
     .content-container {
