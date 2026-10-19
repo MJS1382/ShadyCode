@@ -1,0 +1,52 @@
+<div class="d-flex justify-content-center align-items-center">
+    <div class="card border-light shadow-sm comment-card mb-3" style="width: 100%; max-width: 500px;">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <div class="flex-grow-1">
+                    <h6 class="card-subtitle mb-1 fw-bold text-primary">@User</h6>
+                    <small class="text-muted d-block">@Date</small>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <p class="card-text">@Text</p>
+            </div>
+
+            <div class="d-flex align-items-center gap-2">
+                <button class="btn btn-sm @(IsLiked ? "btn-primary" : "btn-outline-primary")"
+                        type="button"
+                        data-comment-like
+                        data-comment-id="@CommentId"
+                        data-liked="@IsLiked.ToString().ToLowerInvariant()"
+                        aria-label="@(IsLiked ? "Unlike comment" : "Like comment")"
+                        disabled="@(CommentId is null)">
+                    <i class="bi @(IsLiked ? "bi-hand-thumbs-up-fill" : "bi-hand-thumbs-up")" aria-hidden="true"></i>
+                    <span>@(IsLiked ? "Unlike" : "Like")</span>
+                </button>
+                <span class="badge bg-primary" data-comment-like-count>@Likes</span>
+                <span class="small text-danger" data-comment-like-status role="status" aria-live="polite"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public string? Text { get; set; }
+
+    [Parameter]
+    public string? User { get; set; }
+
+    [Parameter]
+    public string? Date { get; set; }
+    
+    [Parameter]
+    public int Likes { get; set; }
+
+    [Parameter]
+    public Guid? CommentId { get; set; }
+
+    [Parameter]
+    public bool IsLiked { get; set; }
+}

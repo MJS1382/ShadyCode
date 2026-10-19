@@ -4,13 +4,16 @@ using PersonalBlog.Data;
 using PersonalBlog.Services;
 using PersonalBlog.Components;
 using PersonalBlog.Services.Auth;
-using Microsoft.AspNetCore.Components.QuickGrid.EntityFrameworkAdapter;
+using PersonalBlog.Services.Redis;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddValidation();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
@@ -51,6 +54,23 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    options.InstanceName = "Redis";
+});
+builder.Services.AddScoped<IConnectionMultiplexer>(_ =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("Redis")
+        ?? throw new InvalidOperationException("Redis connection string is missing.");
+
+    var options = ConfigurationOptions.Parse(connectionString);
+    
+    return ConnectionMultiplexer.Connect(options);
+});
+builder.Services.AddScoped<IRedisCacheService, RedisCacheService>();
+builder.Services.AddScoped<IHyperLogLogStore, HyperLogLogStore>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -81,5 +101,6 @@ app.MapRazorComponents<App>()
 
 app.MapGroup("/api/blog")
     .MapBlogEndpoints();
+    //.RequireAuthorization();
 
 app.Run();

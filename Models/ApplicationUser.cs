@@ -16,6 +16,7 @@ public class ApplicationUser
     public List<Role> Roles { get; set; } = new(); //nav property
     public List<Post> Posts { get; set; } = new();
     public List<Post> LikedPosts { get; set; } = new();
+    public List<Comment> LikedComments { get; set; } = new();
     public DateTime RegisteredAt { get; set; } = DateTime.UtcNow;
     public Guid SecurityStamp { get; set; }
 }

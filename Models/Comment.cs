@@ -14,4 +14,5 @@ public sealed class Comment
     public int Likes { get; set; }
     [Required]
     public DateTime Date { get; set; }
+    public List<ApplicationUser> LikedByUsers { get; set;} = new();
 }
