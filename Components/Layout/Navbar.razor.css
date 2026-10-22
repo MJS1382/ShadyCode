@@ -10,6 +10,10 @@
     margin-right: 4px;
 }
 
+.nav-container ::deep a:hover {
+    color: #c9a879;
+}
+
 #menu {
     display: none;
 }
