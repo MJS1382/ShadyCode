@@ -19,3 +19,105 @@ img{
     object-fit: contain;
     height: 100%;
 }
+
+/* AI GENERATED CODE BEGINS */
+.blog-post-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+    align-items: stretch;
+    gap: 1.25rem;
+    width: min(100%, 1120px);
+}
+
+.blog-post-card {
+    overflow: hidden;
+    border-color: var(--bs-border-color);
+    background: var(--bs-tertiary-bg);
+}
+
+.blog-post-grid ::deep .blog-post-image {
+    display: block;
+    overflow: hidden;
+    aspect-ratio: 1;
+    background: var(--bs-secondary-bg);
+}
+
+.blog-post-grid ::deep .blog-post-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 300ms ease;
+}
+
+.blog-post-grid ::deep .blog-post-image:hover img {
+    transform: scale(1.035);
+}
+
+.blog-post-card .post-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--bs-secondary-color);
+    font-size: 0.78rem;
+}
+
+.blog-post-title {
+    margin: 0.45rem 0 0.65rem;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.3rem;
+    font-weight: 500;
+    letter-spacing: -0.035em;
+    line-height: 1.22;
+}
+
+.blog-post-title ::deep a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.blog-post-title ::deep a:hover {
+    color: var(--bs-link-hover-color);
+}
+
+.blog-post-preview {
+    display: -webkit-box;
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+    color: var(--bs-secondary-color);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+}
+
+.blog-post-preview ::deep p {
+    margin-bottom: 0;
+}
+
+.blog-post-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: auto;
+    padding-top: 0.75rem;
+}
+
+.blog-post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0.65rem;
+}
+
+.blog-post-message {
+    grid-column: 1 / -1;
+    margin: 1rem 0;
+}
+
+@media (max-width: 575.98px) {
+    .blog-post-grid {
+        grid-template-columns: 1fr;
+    }
+}
+/* AI GENERATED CODE ENDS */

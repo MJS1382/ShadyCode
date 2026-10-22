@@ -19,9 +19,9 @@
     height: 3rem;
     align-items: center;
     justify-content: center;
-    border: 1px solid #0d6efd;
+    border: 1px solid #c9a879;
     border-radius: 50%;
-    background-color: #0d6efd;
+    background-color: #c9a879;
     color: #fff;
     opacity: 0;
     visibility: hidden;
@@ -38,12 +38,12 @@
 }
 
 .scroll-to-top:hover {
-    border-color: #0a58ca;
-    background-color: #0b5ed7;
+    border-color: #b99765;
+    background-color: #b99765;
 }
 
 .scroll-to-top:focus-visible {
-    outline: 3px solid rgba(13, 110, 253, 0.45);
+    outline: 3px solid rgba(201, 168, 121, 0.45);
     outline-offset: 3px;
 }
 
@@ -57,23 +57,23 @@
 
 .btn-like {
     border-radius: 30px;
-    background-color: #0d6efd;
-    border: 1px solid #0d6efd;
+    background-color: #c9a879;
+    border: 1px solid #c9a879;
     color: #fff;
     transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
 }
 
 .btn-like:hover {
     color: #fff;
-    background-color: #0b5ed7;
-    border-color: #0a58ca;
+    background-color: #c9a879;
+    border-color: #c9a879;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(13, 110, 253, 0.18);
 }
 
 .btn-like.liked {
-    background-color: #0d6efd;
-    border-color: #0d6efd;
+    background-color: #c9a879;
+    border-color: #c9a879;
     color: #fff;
 }
 

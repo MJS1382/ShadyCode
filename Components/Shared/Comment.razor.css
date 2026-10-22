@@ -1,0 +1,56 @@
+/* AI GENERATED CODE BEGINS */
+.comments-style-scope ::deep .post-comment-submit {
+    border-radius: var(--bs-btn-border-radius);
+    border-color: #c9a879;
+    background-color: #c9a879;
+    color: #fff;
+    transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+
+.comments-style-scope ::deep .post-comment-submit:hover {
+    border-color: #c9a879;
+    background-color: #c9a879;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.18);
+}
+
+.comments-style-scope ::deep .post-comment-submit:active {
+    transform: scale(0.98);
+}
+
+.comments-style-scope ::deep .comment-card .comment-like-button {
+    border: 1px solid #c9a879;
+    border-radius: 30px;
+    background-color: #c9a879;
+    color: #fff;
+    transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+
+.comments-style-scope ::deep .comment-card .comment-like-button:hover {
+    border-color: #c9a879;
+    background-color: #c9a879;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.18);
+}
+
+.comments-style-scope ::deep .comment-card .comment-like-button:active {
+    transform: scale(0.9);
+    box-shadow: 0 0 0 0.35rem rgba(13, 110, 253, 0.28);
+}
+
+.comments-style-scope ::deep .comment-card .comment-like-button:disabled {
+    border-color: #c9a879;
+    background-color: #c9a879;
+    color: #fff;
+    opacity: 0.65;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .comments-style-scope ::deep .post-comment-submit,
+    .comments-style-scope ::deep .comment-card .comment-like-button {
+        transition: none;
+    }
+}
+/* AI GENERATED CODE ENDS */

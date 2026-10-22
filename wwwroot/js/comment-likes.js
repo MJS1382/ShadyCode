@@ -4,8 +4,6 @@
     const label = button.querySelector("span");
 
     button.dataset.liked = String(liked);
-    button.classList.toggle("btn-primary", liked);
-    button.classList.toggle("btn-outline-primary", !liked);
     button.setAttribute("aria-label", liked ? "Unlike comment" : "Like comment");
 
     if (icon) {

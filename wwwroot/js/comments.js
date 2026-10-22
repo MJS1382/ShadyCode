@@ -59,7 +59,7 @@
     const likeButton = document.createElement("button");
     // AI GENERATED CODE BEGINS
     const isLiked = comment.isLikedByUser === true;
-    likeButton.className = `btn btn-sm ${isLiked ? "btn-primary" : "btn-outline-primary"}`;
+    likeButton.className = "btn btn-sm comment-like-button";
     // AI GENERATED CODE ENDS
     likeButton.type = "button";
     likeButton.dataset.commentLike = "";
@@ -83,7 +83,7 @@
     likeButton.append(icon, label);
 
     const count = document.createElement("span");
-    count.className = "badge bg-primary";
+    count.className = "badge text-bg-secondary";
     count.dataset.commentLikeCount = "";
     count.textContent = Number.isInteger(comment.likes) ? String(comment.likes) : "0";
 

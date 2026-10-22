@@ -1,9 +1,211 @@
-﻿@page "/"
+@page "/"
+@using Microsoft.EntityFrameworkCore
+@using PersonalBlog.Data
+@inject ApplicationDbContext DbContext
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Home | Shady Code</PageTitle>
 
-<div class="container text-center">
-    <br>
-    <h1>Welcome to My Blog</h1>
-    <p>This is my home page</p>
-</div>
+@* AI GENERATED CODE BEGINS *@
+<main class="home-page">
+    <div class="home-content">
+        <div class="home-hero">
+            <section class="home-intro" aria-labelledby="home-title">
+                <p class="home-eyebrow">Welcome to Shady Code</p>
+                <h1 id="home-title">Software engineering, Systems design, AI, Linux, Embedded systems, And more</h1>
+                <p class="home-lede">I'm primarily a backend developer, but my curiosity doesn't stop there. I enjoy exploring and experimenting with different technologies, and learning beyond my usual stack. Shady Code is where I share what I know, what I build, what I learn, and the things I discover along the way.</p>
+                <NavLink class="btn btn-outline-light home-browse-link" href="/blog">
+                    Explore the blog <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                </NavLink>
+            </section>
+
+            <section class="featured-section" aria-labelledby="featured-heading">
+                <div class="section-heading">
+                    <div>
+                        <p class="section-kicker">Selected reading</p>
+                        <h2 id="featured-heading">Featured post</h2>
+                    </div>
+                </div>
+
+                @if (featuredPost is not null)
+                {
+                    <article class="featured-card">
+                        <NavLink class="featured-image-link" href="@PostUrl(featuredPost)" aria-label="@($"Read {featuredPost.Title}")">
+                            <img class="featured-image"
+                                 src="@ThumbnailUrl(featuredPost)"
+                                 alt=""
+                                 fetchpriority="high" />
+                        </NavLink>
+                        <div class="featured-copy">
+                            <div class="post-meta">
+                                <time datetime="@featuredPost.PublishDate.ToString("yyyy-MM-dd")">@featuredPost.PublishDate.ToString("MMM d, yyyy")</time>
+                                <span aria-hidden="true">·</span>
+                                <span>@ReadTime(featuredPost) min read</span>
+                            </div>
+                            <h3><NavLink href="@PostUrl(featuredPost)">@featuredPost.Title</NavLink></h3>
+                            @if (GetTags(featuredPost.Tags).Length > 0)
+                            {
+                                <div class="post-tags" aria-label="Post topics">
+                                    @foreach (var tag in GetTags(featuredPost.Tags).Take(3))
+                                    {
+                                        <span class="badge rounded-pill text-bg-secondary">@tag</span>
+                                    }
+                                </div>
+                            }
+                            <NavLink class="read-link" href="@PostUrl(featuredPost)">
+                                Read post <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
+                            </NavLink>
+                        </div>
+                    </article>
+                }
+                else
+                {
+                    <p class="empty-state">No posts have been published yet.</p>
+                }
+            </section>
+        </div>
+
+        <div class="post-sections">
+            <section class="post-section recent-section" aria-labelledby="recent-heading">
+                <div class="section-heading">
+                    <div>
+                        <p class="section-kicker">Latest from the blog</p>
+                        <h2 id="recent-heading">Recent posts</h2>
+                    </div>
+                    <NavLink class="section-link" href="/blog">All posts <i class="bi bi-arrow-right" aria-hidden="true"></i></NavLink>
+                </div>
+
+                @if (recentPosts.Count > 0)
+                {
+                    <div class="recent-grid">
+                        @foreach (var post in recentPosts)
+                        {
+                            <article class="recent-card card">
+                                <NavLink class="recent-image-link" href="@PostUrl(post)" aria-label="@($"Read {post.Title}")">
+                                    <img src="@ThumbnailUrl(post)" alt="" loading="lazy" />
+                                </NavLink>
+                                <div class="recent-card-copy card-body">
+                                    <time class="post-meta" datetime="@post.PublishDate.ToString("yyyy-MM-dd")">@post.PublishDate.ToString("MMM d, yyyy")</time>
+                                    <h3><NavLink href="@PostUrl(post)">@post.Title</NavLink></h3>
+                                    <span class="read-time">@ReadTime(post) min read</span>
+                                </div>
+                            </article>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="empty-state">Recent posts will appear here when published.</p>
+                }
+            </section>
+
+            <section class="post-section popular-section" aria-labelledby="popular-heading">
+                <div class="section-heading">
+                    <div>
+                        <p class="section-kicker">Most viewed</p>
+                        <h2 id="popular-heading">Popular posts</h2>
+                    </div>
+                </div>
+
+                @if (popularPosts.Count > 0)
+                {
+                    <div class="popular-list">
+                        @foreach (var post in popularPosts)
+                        {
+                            <article class="popular-card">
+                                <div class="popular-copy">
+                                    <div class="post-meta">
+                                        <time datetime="@post.PublishDate.ToString("yyyy-MM-dd")">@post.PublishDate.ToString("MMM d, yyyy")</time>
+                                        <span aria-hidden="true">·</span>
+                                        <span>@post.ViewCount.ToString("N0") views</span>
+                                    </div>
+                                    <h3><NavLink href="@PostUrl(post)">@post.Title</NavLink></h3>
+                                </div>
+                                <NavLink class="popular-arrow" href="@PostUrl(post)" aria-label="@($"Read {post.Title}")">
+                                    <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
+                                </NavLink>
+                            </article>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="empty-state">Popular posts will appear here as readers discover them.</p>
+                }
+            </section>
+        </div>
+    </div>
+</main>
+@* AI GENERATED CODE ENDS *@
+
+@code {
+    // AI GENERATED CODE BEGINS
+    private const int SectionPostCount = 4;
+
+    private HomePost? featuredPost;
+    private List<HomePost> recentPosts = [];
+    private List<HomePost> popularPosts = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        featuredPost = await PublishedPosts
+            .OrderByDescending(post => post.PublishDate)
+            .ThenBy(post => post.Title)
+            .FirstOrDefaultAsync();
+
+        recentPosts = await PublishedPosts
+            .OrderByDescending(post => post.PublishDate)
+            .ThenBy(post => post.Title)
+            .Take(SectionPostCount)
+            .OrderBy(post => post.Title)
+            .ToListAsync();
+
+        popularPosts = await PublishedPosts
+            .OrderByDescending(post => post.ViewCount)
+            .ThenByDescending(post => post.LikeCount)
+            .ThenByDescending(post => post.PublishDate)
+            .Take(SectionPostCount)
+            .OrderBy(post => post.Title)
+            .ToListAsync();
+    }
+
+    private IQueryable<HomePost> PublishedPosts =>
+        DbContext.Posts
+            .AsNoTracking()
+            .Where(post => post.PublishDate > DateTime.MinValue)
+            .Select(post => new HomePost
+            {
+                Title = post.Title,
+                Slug = post.Slug,
+                Tags = post.Tags,
+                ThumbnailPath = post.ThumbnailPath,
+                ViewCount = post.ViewCount,
+                LikeCount = post.Likes,
+                ReadTimeSeconds = post.ReadTimeSeconds,
+                PublishDate = post.PublishDate
+            });
+
+    private static string PostUrl(HomePost post) => $"/blog/{post.Slug}";
+
+    private static string ThumbnailUrl(HomePost post) =>
+        string.IsNullOrWhiteSpace(post.ThumbnailPath) ? "/img/empty-square.webp" : post.ThumbnailPath;
+
+    private static int ReadTime(HomePost post) => Math.Max(1, (post.ReadTimeSeconds + 59) / 60);
+
+    private static string[] GetTags(string? tags) =>
+        string.IsNullOrWhiteSpace(tags)
+            ? []
+            : tags.Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+
+    private sealed class HomePost
+    {
+        public string Title { get; init; } = string.Empty;
+        public string Slug { get; init; } = string.Empty;
+        public string Tags { get; init; } = string.Empty;
+        public string ThumbnailPath { get; init; } = string.Empty;
+        public int ViewCount { get; init; }
+        public int LikeCount { get; init;}
+        public int ReadTimeSeconds { get; init; }
+        public DateTime PublishDate { get; init; }
+    }
+    // AI GENERATED CODE ENDS
+}
