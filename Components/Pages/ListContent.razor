@@ -18,7 +18,7 @@
             </div>
         </div>
         <div>
-            @* tegs *@
+            @* tegs (we provide tags here so user can click and search by the tags directly) *@
         </div>
     </div>
     
@@ -47,7 +47,7 @@
                                     <NavLink href="@($"/blog/{item.Slug}")">@(item.Title)</NavLink>
                                 </h2>
                                 <div class="card-text blog-post-preview">
-                                    @((MarkupString)item.Contetnt!)
+                                    @item.Contetnt
                                 </div>
                                 <div class="blog-post-actions">
                                     @if (item.Tags is { Length: > 0 })

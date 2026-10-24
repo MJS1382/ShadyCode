@@ -28,6 +28,7 @@
     width: 100%;
     animation: dropdown 0.3s ease;
     z-index: 5;
+    top: 50px;
 }
 
 @keyframes dropdown {

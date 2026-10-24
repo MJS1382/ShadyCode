@@ -1,6 +1,7 @@
 @page "/"
 @using Microsoft.EntityFrameworkCore
 @using PersonalBlog.Data
+@using PersonalBlog.Models
 @inject ApplicationDbContext DbContext
 
 <PageTitle>Home | Shady Code</PageTitle>
@@ -42,10 +43,11 @@
                                 <span>@ReadTime(featuredPost) min read</span>
                             </div>
                             <h3><NavLink href="@PostUrl(featuredPost)">@featuredPost.Title</NavLink></h3>
-                            @if (GetTags(featuredPost.Tags).Length > 0)
+                            <div class="home-post-preview">@featuredPost.Contetnt</div>
+                            @if (featuredPost.Tags is { Length: > 0 })
                             {
                                 <div class="post-tags" aria-label="Post topics">
-                                    @foreach (var tag in GetTags(featuredPost.Tags).Take(3))
+                                    @foreach (var tag in featuredPost.Tags.Where(tag => !string.IsNullOrWhiteSpace(tag)).Take(3))
                                     {
                                         <span class="badge rounded-pill text-bg-secondary">@tag</span>
                                     }
@@ -86,6 +88,7 @@
                                 <div class="recent-card-copy card-body">
                                     <time class="post-meta" datetime="@post.PublishDate.ToString("yyyy-MM-dd")">@post.PublishDate.ToString("MMM d, yyyy")</time>
                                     <h3><NavLink href="@PostUrl(post)">@post.Title</NavLink></h3>
+                                    <div class="home-post-preview">@post.Contetnt</div>
                                     <span class="read-time">@ReadTime(post) min read</span>
                                 </div>
                             </article>
@@ -119,6 +122,7 @@
                                         <span>@post.ViewCount.ToString("N0") views</span>
                                     </div>
                                     <h3><NavLink href="@PostUrl(post)">@post.Title</NavLink></h3>
+                                    <div class="home-post-preview">@post.Contetnt</div>
                                 </div>
                                 <NavLink class="popular-arrow" href="@PostUrl(post)" aria-label="@($"Read {post.Title}")">
                                     <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
@@ -141,9 +145,9 @@
     // AI GENERATED CODE BEGINS
     private const int SectionPostCount = 4;
 
-    private HomePost? featuredPost;
-    private List<HomePost> recentPosts = [];
-    private List<HomePost> popularPosts = [];
+    private PostCardItem? featuredPost;
+    private List<PostCardItem> recentPosts = [];
+    private List<PostCardItem> popularPosts = [];
 
     protected override async Task OnInitializedAsync()
     {
@@ -161,51 +165,35 @@
 
         popularPosts = await PublishedPosts
             .OrderByDescending(post => post.ViewCount)
-            .ThenByDescending(post => post.LikeCount)
+            .ThenByDescending(post => post.ReadTimeSeconds)
             .ThenByDescending(post => post.PublishDate)
             .Take(SectionPostCount)
             .OrderBy(post => post.Title)
             .ToListAsync();
     }
 
-    private IQueryable<HomePost> PublishedPosts =>
+    private IQueryable<PostCardItem> PublishedPosts =>
         DbContext.Posts
             .AsNoTracking()
             .Where(post => post.PublishDate > DateTime.MinValue)
-            .Select(post => new HomePost
+            .Select(post => new PostCardItem
             {
                 Title = post.Title,
                 Slug = post.Slug,
-                Tags = post.Tags,
+                Tags = PostCardItem.SetTags(post.Tags),
                 ThumbnailPath = post.ThumbnailPath,
                 ViewCount = post.ViewCount,
-                LikeCount = post.Likes,
                 ReadTimeSeconds = post.ReadTimeSeconds,
-                PublishDate = post.PublishDate
+                PublishDate = post.PublishDate,
+                Contetnt = PostCardItem.PreviewContent(post.Content, 128)
             });
 
-    private static string PostUrl(HomePost post) => $"/blog/{post.Slug}";
+    private static string PostUrl(PostCardItem post) => $"/blog/{post.Slug}";
 
-    private static string ThumbnailUrl(HomePost post) =>
+    private static string ThumbnailUrl(PostCardItem post) =>
         string.IsNullOrWhiteSpace(post.ThumbnailPath) ? "/img/empty-square.webp" : post.ThumbnailPath;
 
-    private static int ReadTime(HomePost post) => Math.Max(1, (post.ReadTimeSeconds + 59) / 60);
+    private static int ReadTime(PostCardItem post) => Math.Max(1, (post.ReadTimeSeconds + 59) / 60);
 
-    private static string[] GetTags(string? tags) =>
-        string.IsNullOrWhiteSpace(tags)
-            ? []
-            : tags.Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
-
-    private sealed class HomePost
-    {
-        public string Title { get; init; } = string.Empty;
-        public string Slug { get; init; } = string.Empty;
-        public string Tags { get; init; } = string.Empty;
-        public string ThumbnailPath { get; init; } = string.Empty;
-        public int ViewCount { get; init; }
-        public int LikeCount { get; init;}
-        public int ReadTimeSeconds { get; init; }
-        public DateTime PublishDate { get; init; }
-    }
     // AI GENERATED CODE ENDS
 }

@@ -166,6 +166,21 @@
     color: var(--home-accent);
 }
 
+.home-post-preview {
+    display: -webkit-box;
+    overflow: hidden;
+    margin-bottom: 1rem;
+    color: var(--home-muted);
+    font-size: 0.9rem;
+    line-height: 1.55;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+}
+
+.home-post-preview ::deep p {
+    text-align: left !important;
+}
+
 .post-tags {
     display: flex;
     flex-wrap: wrap;
@@ -224,7 +239,7 @@
 
 .popular-card {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     gap: 0.8rem;
     border-bottom: 1px solid var(--home-line);
@@ -233,6 +248,10 @@
 
 .popular-card h3 {
     margin-bottom: 0;
+}
+
+.popular-copy {
+    min-width: 0;
 }
 
 .popular-arrow {

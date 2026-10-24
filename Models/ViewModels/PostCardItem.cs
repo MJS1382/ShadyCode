@@ -14,13 +14,16 @@ public class PostCardItem
     public static string[] SetTags(string input) => input.Split(';');
     public static string? PreviewContent(string input, int length)
     {
-        length = Math.Min(input.Length - 1, length);
-        input = input[..length];
-        int lastSpace = input.IndexOf("<br>");
+        if (string.IsNullOrWhiteSpace(input) || length <= 0)
+            return string.Empty;
 
-        if (lastSpace > 0)
-            input = input[..lastSpace];
+        var preview = System.Net.WebUtility.HtmlDecode(
+            System.Text.RegularExpressions.Regex.Replace(input, "<[^>]*>", " "));
+        preview = System.Text.RegularExpressions.Regex.Replace(preview, @"\s+", " ").Trim();
 
-        return input + "...";
+        if (preview.Length <= length)
+            return preview;
+
+        return preview[..length].TrimEnd() + "...";
     }
 }
