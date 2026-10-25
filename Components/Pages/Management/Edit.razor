@@ -68,7 +68,20 @@
     private Dictionary<string, object> editorConfiguration = new Dictionary<string, object>()
     {  
         {"height", 600},
-        { "plugins", "lists link image code advlist anchor autolink autosave charmap codesample directionality emoticons fullscreen help importcss TODO" }
+        {"body_class", "article-content"},
+        {"content_css", new[] { "/lib/prismjs/prism-tomorrow.min.css", "/css/article-content.css" }},
+        { "plugins", "lists link image code advlist anchor autolink autosave charmap codesample directionality emoticons fullscreen help importcss TODO" },
+        { "codesample_languages", new[]
+            {
+                new { text = "HTML", value = "markup" },
+                new { text = "CSS", value = "css" },
+                new { text = "C", value = "c" },
+                new { text = "C++", value = "cpp" },
+                new { text = "C#", value = "csharp" },
+                new { text = "Python", value = "python" },
+                new { text = "Rust", value = "rust" }
+            }
+        }
     };
 
     protected override async Task OnInitializedAsync()
