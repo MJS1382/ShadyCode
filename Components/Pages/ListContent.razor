@@ -47,7 +47,7 @@
                                     <NavLink href="@($"/blog/{item.Slug}")">@(item.Title)</NavLink>
                                 </h2>
                                 <div class="card-text blog-post-preview">
-                                    @item.Contetnt
+                                    @item.Content
                                 </div>
                                 <div class="blog-post-actions">
                                     @if (item.Tags is { Length: > 0 })
@@ -184,7 +184,7 @@
                 ThumbnailPath = p.ThumbnailPath,
                 ReadTimeSeconds = p.ReadTimeSeconds,
                 Tags = PostCardItem.SetTags(p.Tags),
-                Contetnt = PostCardItem.PreviewContent(p.Content, 128)
+                Content = PostCardItem.PreviewContent(p.Content, 128)
             })
             .ToListAsync();
     }

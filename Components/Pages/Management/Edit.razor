@@ -116,8 +116,7 @@
                 Tags = postInput.Tags ?? "",
                 ThumbnailPath = postInput.ThumbnailPath!,
                 ReadTimeSeconds = int.Parse(postInput.ReadTimeSeconds!),
-                Content = content ?? "",
-                //PublishDate = DateTime.UtcNow,
+                Content = content ?? ""
             };
             user.Posts.Add(newPost);
 

@@ -27,9 +27,10 @@
             <PropertyColumn Property="@(c => c.PublishDate)" Sortable="true" Align="Align.Right" />
             <TemplateColumn Title="Actions">
                 <div class="p-3">
-                    <button class="btn btn-primary" @onclick="() => Publish(context)">Publish</button>
+                    <button class="btn btn-success" @onclick="() => Publish(context)">Publish</button>
+                    <button class="btn btn-success" @onclick="() => Feature(context)">Feature</button>
                     <button class="btn btn-primary" @onclick="() => View(context)">View</button>
-                    <button class="btn btn-primary" @onclick="() => Edit(context)">Edit</button>
+                    <button class="btn btn-warning" @onclick="() => Edit(context)">Edit</button>
                     <button class="btn btn-primary btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop" @onclick="() => OpenRemoveConfirmationModal(context)">Remove</button>
                 </div>
             </TemplateColumn>
@@ -79,7 +80,7 @@
         .ThenAscending(p => p.Title);
 
     Tuple<string, string> message = new Tuple<string, string>("", "");
-    
+
     Post? removingPost = null;
 
 
@@ -108,6 +109,42 @@
 
         message = new ("• Published Successfully", "text-success");
         res.PublishDate = DateTime.UtcNow;
+        await dbContext.SaveChangesAsync();
+        await LoadPostsAsync();
+        await quickGrid!.RefreshDataAsync();
+    }
+
+    // AI GENERATED CODE BEGINS
+    async Task Unpublish(Post post)
+    {
+        var res = await dbContext.Posts.FirstOrDefaultAsync(p => p.Id == post.Id);
+        if (res is null) return;
+        if (res.PublishDate <= DateTime.MinValue) 
+        {
+            message = new ("• The post is already unpublished", "text-danger");
+            return;
+        }
+
+        message = new ("• Unpublished Successfully", "text-success");
+        res.PublishDate = DateTime.MinValue;
+        await dbContext.SaveChangesAsync();
+        await LoadPostsAsync();
+        await quickGrid!.RefreshDataAsync();
+    }
+    // AI GENERATED CODE ENDS
+
+    async Task Feature(Post post)
+    {
+        var res = await dbContext.Posts.FirstOrDefaultAsync(p => p.Id == post.Id);
+        if (res is null) return;
+        @* if (res.FeaturedDate > DateTime.MinValue)
+        {
+            message = new ("• The post is already Featured", "text-danger");
+            return;
+        } *@
+
+        message = new ("• Featured Successfully", "text-success");
+        res.FeaturedDate = DateTime.UtcNow;
         await dbContext.SaveChangesAsync();
         await LoadPostsAsync();
         await quickGrid!.RefreshDataAsync();

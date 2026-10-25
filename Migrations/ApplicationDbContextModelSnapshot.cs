@@ -141,6 +141,9 @@ namespace PersonalBlog.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<DateTime>("FeaturedDate")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<int>("Likes")
                         .HasColumnType("integer");
 

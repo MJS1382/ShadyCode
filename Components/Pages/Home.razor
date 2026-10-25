@@ -43,7 +43,7 @@
                                 <span>@ReadTime(featuredPost) min read</span>
                             </div>
                             <h3><NavLink href="@PostUrl(featuredPost)">@featuredPost.Title</NavLink></h3>
-                            <div class="home-post-preview">@featuredPost.Contetnt</div>
+                            <div class="home-post-preview">@featuredPost.Content</div>
                             @if (featuredPost.Tags is { Length: > 0 })
                             {
                                 <div class="post-tags" aria-label="Post topics">
@@ -88,7 +88,7 @@
                                 <div class="recent-card-copy card-body">
                                     <time class="post-meta" datetime="@post.PublishDate.ToString("yyyy-MM-dd")">@post.PublishDate.ToString("MMM d, yyyy")</time>
                                     <h3><NavLink href="@PostUrl(post)">@post.Title</NavLink></h3>
-                                    <div class="home-post-preview">@post.Contetnt</div>
+                                    <div class="home-post-preview">@post.Content</div>
                                     <span class="read-time">@ReadTime(post) min read</span>
                                 </div>
                             </article>
@@ -122,7 +122,7 @@
                                         <span>@post.ViewCount.ToString("N0") views</span>
                                     </div>
                                     <h3><NavLink href="@PostUrl(post)">@post.Title</NavLink></h3>
-                                    <div class="home-post-preview">@post.Contetnt</div>
+                                    <div class="home-post-preview">@post.Content</div>
                                 </div>
                                 <NavLink class="popular-arrow" href="@PostUrl(post)" aria-label="@($"Read {post.Title}")">
                                     <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
@@ -152,21 +152,19 @@
     protected override async Task OnInitializedAsync()
     {
         featuredPost = await PublishedPosts
-            .OrderByDescending(post => post.PublishDate)
+            .OrderByDescending(post => post.FeaturedDate)
             .ThenBy(post => post.Title)
             .FirstOrDefaultAsync();
 
         recentPosts = await PublishedPosts
             .OrderByDescending(post => post.PublishDate)
-            .ThenBy(post => post.Title)
             .Take(SectionPostCount)
             .OrderBy(post => post.Title)
             .ToListAsync();
 
         popularPosts = await PublishedPosts
             .OrderByDescending(post => post.ViewCount)
-            .ThenByDescending(post => post.ReadTimeSeconds)
-            .ThenByDescending(post => post.PublishDate)
+            .ThenByDescending(post => post.Likes)
             .Take(SectionPostCount)
             .OrderBy(post => post.Title)
             .ToListAsync();
@@ -185,7 +183,9 @@
                 ViewCount = post.ViewCount,
                 ReadTimeSeconds = post.ReadTimeSeconds,
                 PublishDate = post.PublishDate,
-                Contetnt = PostCardItem.PreviewContent(post.Content, 128)
+                FeaturedDate = post.FeaturedDate,
+                Content = PostCardItem.PreviewContent(post.Content, 128),
+                Likes = post.Likes
             });
 
     private static string PostUrl(PostCardItem post) => $"/blog/{post.Slug}";
