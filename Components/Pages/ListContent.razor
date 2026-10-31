@@ -9,7 +9,7 @@
     <div class="p-2 mt-3 mx-md-5">
         <div class="d-flex justify-content-center align-items-center">
             <div class="flex-grow-1">
-                    <input value="@textInput" @oninput="HandleSearchInput" class="form-control" aria-label="Search posts" />
+                    <input value="@textInput" @oninput="HandleSearchInput" @onkeydown="HandleSearchKeyDown" class="form-control" aria-label="Search posts" />
             </div>
             <div class="ms-2">
                 <button class="search-button btn btn-outline-light" type="reset" @onclick="() => SearchAsync()">
@@ -196,6 +196,14 @@
         if (string.IsNullOrWhiteSpace(textInput))
         {
             await LoadPageAsync(0);
+        }
+    }
+
+    async Task HandleSearchKeyDown(KeyboardEventArgs args)
+    {
+        if (args.Key == "Enter")
+        {
+            await SearchAsync();
         }
     }
 }
