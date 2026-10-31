@@ -206,7 +206,7 @@ public static class BlogEndpoints
                 comment.Likes = comment.LikedByUsers.Count;
                 await DbContext.SaveChangesAsync();
                 return Results.Ok(new { isLikedByUser, likeCount = comment.Likes });
-            }).RequireAuthorization();
+            });
 
             group.MapGet("/comments/likes/{commentId:guid}",
             async (

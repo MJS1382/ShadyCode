@@ -16,6 +16,15 @@
     }
   };
 
+  const showSignInMessage = (status) => {
+    if (!status) return;
+
+    const loginLink = document.createElement("a");
+    loginLink.href = "/auth/login";
+    loginLink.textContent = "sign in";
+    status.replaceChildren("Please ", loginLink, " to like this comment.");
+  };
+
   document.addEventListener("click", async (event) => {
     if (!(event.target instanceof Element)) return;
 
@@ -29,8 +38,13 @@
     const count = card?.querySelector("[data-comment-like-count]");
     const status = card?.querySelector("[data-comment-like-status]");
 
-    button.disabled = true;
     if (status) status.textContent = "";
+    if (button.closest("[data-comments-loader]")?.dataset.authenticated === "false") {
+      showSignInMessage(status);
+      return;
+    }
+
+    button.disabled = true;
 
     try {
       const response = await fetch(
@@ -42,11 +56,14 @@
         }
       );
 
-      if (!response.ok) {
-        if (response.status === 401) {
-          throw new Error("Sign in to like this comment.");
-        }
+      const redirectedToLogin = response.redirected &&
+        new URL(response.url, window.location.href).pathname === "/auth/login";
+      if (response.status === 401 || redirectedToLogin) {
+        showSignInMessage(status);
+        return;
+      }
 
+      if (!response.ok) {
         throw new Error("Unable to update the comment like. Please try again.");
       }
 

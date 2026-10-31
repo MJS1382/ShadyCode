@@ -223,7 +223,14 @@
 }
 
 .recent-card-copy {
+    display: flex;
+    flex-direction: column;
     padding: 1rem;
+}
+
+.recent-card .read-time {
+    margin-top: auto;
+    padding-top: 1rem;
 }
 
 .recent-card h3,

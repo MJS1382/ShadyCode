@@ -38,6 +38,7 @@
                  data-comments-loader
                  data-post-id="@id"
                  data-page-size="10"
+                 data-authenticated="@((!string.IsNullOrWhiteSpace(currentUsername)).ToString().ToLowerInvariant())"
                  aria-labelledby="comments-heading">
             <div class="mx-auto" style="max-width: 500px;">
                 <h2 id="comments-heading" class="h4 mb-3">Comments</h2>
