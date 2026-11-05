@@ -7,7 +7,7 @@ public class PostCardItem
     public string? Slug { get; set; }
     public string[]? Tags { get; set; }
     public string? ThumbnailPath { get; set; }
-    public int ViewCount { get; set; }
+    public long ViewCount { get; set; }
     public int ReadTimeSeconds { get; set; }
     public int Likes { get; set; }
     public DateTime PublishDate { get; set; }

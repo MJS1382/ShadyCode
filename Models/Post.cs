@@ -19,8 +19,8 @@ public sealed class Post
     public string Content { get; set; } = string.Empty;
     [StringLength(512)]
     public string ThumbnailPath { get; set; } = string.Empty;
+    public long ViewCount { get; set; }
     public int Likes { get; set; }
-    public int ViewCount { get; set; }
     public int ReadTimeSeconds { get; set; }
     public DateTime PublishDate { get; set; }
     public DateTime FeaturedDate { get; set; }

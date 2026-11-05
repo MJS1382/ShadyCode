@@ -6,6 +6,8 @@ using PersonalBlog.Components;
 using PersonalBlog.Services.Auth;
 using PersonalBlog.Services.Redis;
 using StackExchange.Redis;
+using PersonalBlog.Middlewares;
+using PersonalBlog.BackgroundServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -59,17 +61,20 @@ builder.Services.AddStackExchangeRedisCache(options =>
     options.Configuration = builder.Configuration.GetConnectionString("Redis");
     options.InstanceName = "Redis";
 });
-builder.Services.AddScoped<IConnectionMultiplexer>(_ =>
+builder.Services.AddSingleton<IConnectionMultiplexer>(_ =>
 {
     var connectionString = builder.Configuration.GetConnectionString("Redis")
         ?? throw new InvalidOperationException("Redis connection string is missing.");
 
     var options = ConfigurationOptions.Parse(connectionString);
-    
+    options.AbortOnConnectFail = false;
+
     return ConnectionMultiplexer.Connect(options);
 });
-builder.Services.AddScoped<IRedisCacheService, RedisCacheService>();
-builder.Services.AddScoped<IHyperLogLogStore, HyperLogLogStore>();
+builder.Services.AddSingleton<IRedisCacheService, RedisCacheService>();
+builder.Services.AddSingleton<IHyperLogLogStore, HyperLogLogStore>();
+
+builder.Services.AddHostedService<CacheToDbService>();
 
 var app = builder.Build();
 
@@ -89,6 +94,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
 app.UseHttpsRedirection();
+
+app.UseVisitorIdSpecification();
 
 app.UseAntiforgery();
 

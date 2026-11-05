@@ -2,11 +2,15 @@
 @page "/blog/{slug}"
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.EntityFrameworkCore
-@using PersonalBlog.Data
 @using PersonalBlog.Components.Shared
-@inject ApplicationDbContext DbContext
+@using PersonalBlog.Data
+@using PersonalBlog.Services.Redis
+
+@inject ApplicationDbContext dbContext
 @inject NavigationManager navigationManager
-@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject AuthenticationStateProvider authenticationStateProvider
+@inject IHttpContextAccessor httpContextAccessor
+@inject IHyperLogLogStore hyperLogLogStore
 
 <div class="mx-2 m-sm-5 mt-3">
     <div class="content-container article-content d-flex flex-column">
@@ -94,7 +98,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var res = DbContext.Posts
+        var res = dbContext.Posts
             .Include(p => p.LikedByUsers)
             .FirstOrDefault(p => p.Slug == slug);
 
@@ -108,17 +112,28 @@
         id = res.Id.ToString();
         initialLikeCount = res.LikedByUsers.Count.ToString();
 
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
         var username = authState.User.Identity?.Name;
         currentUsername = username;
 
         if (!string.IsNullOrWhiteSpace(username))
         {
-            var currentUser = await DbContext.Users.FirstOrDefaultAsync(u => u.UserName == username);
+            var currentUser = await dbContext.Users.FirstOrDefaultAsync(u => u.UserName == username);
             if (currentUser is not null)
             {
                 isLiked = res.LikedByUsers.Any(u => u.Id == currentUser.Id);
             }
         }
+
+        var visitorId = httpContextAccessor.HttpContext!.Items["visitor_id"]?.ToString();
+        await AddView(res.Id.ToString(), visitorId!);
+    }
+
+    async Task AddView(string postId, string visitorId)
+    {
+        if(string.IsNullOrEmpty(postId) || string.IsNullOrEmpty(visitorId)) return;
+
+        string key = $"Post:{postId}:views";
+        await hyperLogLogStore.AddAsync(key, visitorId);
     }
 }

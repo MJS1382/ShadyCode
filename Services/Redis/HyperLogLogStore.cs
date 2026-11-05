@@ -11,7 +11,7 @@ public sealed class HyperLogLogStore : IHyperLogLogStore
         _database = connection.GetDatabase();
     }
 
-    public async Task<bool> ItemExists(string key)
+    public async Task<bool> ItemExistsAsync(string key)
     {
         return await _database.KeyExistsAsync(key);
     }
