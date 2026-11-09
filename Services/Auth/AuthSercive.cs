@@ -85,7 +85,6 @@ public sealed class AuthService(
             && !user.RegistrationConfirmed)
         {
             user.RegistrationConfirmed = true;
-            user.SecurityStamp = Guid.NewGuid();
             await dbContext.SaveChangesAsync();
             return true;
         }
@@ -107,8 +106,6 @@ public sealed class AuthService(
 
         if (!verificationResult) return null;
 
-        user.SecurityStamp = Guid.NewGuid();
-        await dbContext.SaveChangesAsync();
         return user;
     }
 

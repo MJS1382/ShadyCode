@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using PersonalBlog.Data;
@@ -38,6 +40,33 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     options.LogoutPath = "/auth/logout";
     options.AccessDeniedPath = "/access-denied";
     options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+    //AI Assisted Code Begins
+    options.Events.OnValidatePrincipal = async context =>
+    {
+        var userIdClaim = context.Principal?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var securityStampClaim = context.Principal?.FindFirst("SecurityStamp")?.Value;
+        if (!Guid.TryParse(userIdClaim, out var userId)
+            || !Guid.TryParse(securityStampClaim, out var securityStamp))
+        {
+            await RejectInvalidCookieAsync(context);
+            return;
+        }
+
+        var dbContext = context.HttpContext.RequestServices.GetRequiredService<ApplicationDbContext>();
+        var userState = await dbContext.Users
+            .AsNoTracking()
+            .Where(user => user.Id == userId)
+            .Select(user => new { user.SecurityStamp, user.RegistrationConfirmed })
+            .FirstOrDefaultAsync(context.HttpContext.RequestAborted);
+
+        if (userState is null
+            || !userState.RegistrationConfirmed
+            || userState.SecurityStamp != securityStamp)
+        {
+            await RejectInvalidCookieAsync(context);
+        }
+    };
+    //AI Assisted Code Ends
 });
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddAuthorization(
@@ -111,3 +140,11 @@ app.MapGroup("/api/blog")
     //.RequireAuthorization();
 
 app.Run();
+
+//AI Assisted Code Begins
+static async Task RejectInvalidCookieAsync(CookieValidatePrincipalContext context)
+{
+    context.RejectPrincipal();
+    await context.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+}
+//AI Assisted Code Ends
