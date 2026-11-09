@@ -89,7 +89,7 @@
                                     <time class="post-meta" datetime="@post.PublishDate.ToString("yyyy-MM-dd")">@post.PublishDate.ToString("MMM d, yyyy")</time>
                                     <h3><NavLink href="@PostUrl(post)">@post.Title</NavLink></h3>
                                     <div class="home-post-preview">@post.Content</div>
-                                    <span class="read-time">@ReadTime(post) min read</span>
+                                    <span class="read-time">@ReadTime(post) min read · @post.ViewCount views</span>
                                 </div>
                             </article>
                         }

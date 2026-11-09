@@ -12,6 +12,15 @@
     }
   };
 
+  const showSignInMessage = (status) => {
+    if (!status) return;
+
+    const loginLink = document.createElement("a");
+    loginLink.href = "/auth/login";
+    loginLink.textContent = "sign in";
+    status.replaceChildren("Please ", loginLink, " to like this post.");
+  };
+
   document.addEventListener("click", (event) => {
     if (!(event.target instanceof Element)) return;
 
@@ -29,9 +38,24 @@
     const button = event.target.closest(".btn-like");
     if (!button || button.disabled) return;
 
+    const status = button.closest(".like-btn-container")?.querySelector("[data-post-like-status]");
+    if (status) status.textContent = "";
+
+    if (button.dataset.authenticated === "false") {
+      showSignInMessage(status);
+      return;
+    }
+
     button.disabled = true;
     try {
       const response = await fetch(`/api/blog/like/${button.dataset.postId}`);
+
+      const redirectedToLogin = response.redirected &&
+        new URL(response.url, window.location.href).pathname === "/auth/login";
+      if (response.status === 401 || redirectedToLogin) {
+        showSignInMessage(status);
+        return;
+      }
 
       if (!response.ok) {
         console.error("Failed to toggle the post like");

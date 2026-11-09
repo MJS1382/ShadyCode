@@ -28,10 +28,14 @@
         <div>
             <p class="mb-1">Smash this like button if you found this post useful.</p>
         </div>
-        <button id="btn-like" class="btn btn-like py-2 @(isLiked ? "liked" : string.Empty)" data-post-id="@id" data-liked="@isLiked.ToString().ToLowerInvariant()">
+        <button id="btn-like" class="btn btn-like py-2 @(isLiked ? "liked" : string.Empty)"
+                data-post-id="@id"
+                data-liked="@isLiked.ToString().ToLowerInvariant()"
+                data-authenticated="@((!string.IsNullOrWhiteSpace(currentUsername)).ToString().ToLowerInvariant())">
             <i class="bi @(isLiked ? "bi-hand-thumbs-up-fill" : "bi-hand-thumbs-up")"></i>
         </button>
         <span id="like-count" class="badge text-bg-secondary">@initialLikeCount</span>
+        <span class="small text-danger" data-post-like-status role="status" aria-live="polite"></span>
     </div>
 </div>
 
