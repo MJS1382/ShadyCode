@@ -119,6 +119,8 @@
                                     <div class="post-meta">
                                         <time datetime="@post.PublishDate.ToString("yyyy-MM-dd")">@post.PublishDate.ToString("MMM d, yyyy")</time>
                                         <span aria-hidden="true">·</span>
+                                        <span class="read-time">@ReadTime(post) min read</span>
+                                        <span aria-hidden="true">·</span>
                                         <span>@post.ViewCount.ToString("N0") views</span>
                                     </div>
                                     <h3><NavLink href="@PostUrl(post)">@post.Title</NavLink></h3>
@@ -153,20 +155,17 @@
     {
         featuredPost = await PublishedPosts
             .OrderByDescending(post => post.FeaturedDate)
-            .ThenBy(post => post.Title)
             .FirstOrDefaultAsync();
 
         recentPosts = await PublishedPosts
             .OrderByDescending(post => post.PublishDate)
             .Take(SectionPostCount)
-            .OrderBy(post => post.Title)
             .ToListAsync();
 
         popularPosts = await PublishedPosts
-            .OrderByDescending(post => post.ViewCount)
-            .ThenByDescending(post => post.Likes)
+            .OrderByDescending(post => post.Likes)
+            .ThenByDescending(post => post.ViewCount)
             .Take(SectionPostCount)
-            .OrderBy(post => post.Title)
             .ToListAsync();
     }
 

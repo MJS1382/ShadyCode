@@ -19,6 +19,12 @@
 </head>
 
 <body data-bs-theme="dark">
+    <script>
+        const savedTheme = localStorage.getItem("preferred-theme");
+        if (savedTheme === "light" || savedTheme === "dark") {
+            document.body.setAttribute("data-bs-theme", savedTheme);
+        }
+    </script>
     <main id="main-content">
         <CascadingAuthenticationState>
             <Routes />
@@ -39,6 +45,7 @@
         <script src="js/post-likes.js"></script>
         <script src="js/comment-likes.js"></script>
         <script src="js/comments.js"></script>
+        <script src="js/theme-toggle.js"></script>
         @* AI GENERATED CODE BEGINS *@
         <script src="js/new-comment.js"></script>
         @* AI GENERATED CODE ENDS *@

@@ -12,7 +12,7 @@
                     <input value="@textInput" @oninput="HandleSearchInput" @onkeydown="HandleSearchKeyDown" class="form-control" aria-label="Search posts" />
             </div>
             <div class="ms-2">
-                <button class="search-button btn btn-outline-light" type="reset" @onclick="() => SearchAsync()">
+                <button class="search-button btn btn-outline" type="reset" @onclick="() => SearchAsync()">
                     <i class="bi bi-search" alt="search"></i>
                 </button>
             </div>
@@ -59,7 +59,7 @@
                                             }
                                         </div>
                                     }
-                                    <NavLink class="btn btn-outline-light btn-sm align-self-start" href="@($"/blog/{item.Slug}")">Read post</NavLink>
+                                    <NavLink class="btn btn-outline btn-sm btn-secondary align-self-start" href="@($"/blog/{item.Slug}")">Read post</NavLink>
                                 </div>
                             </div>
                         </article>
