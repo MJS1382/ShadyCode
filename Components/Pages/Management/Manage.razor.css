@@ -20,4 +20,4 @@
 ::deep tr { height: 1.8rem; }
 
 /* Subtle stripe effect */
-::deep tr:nth-child(even) { background: #1e2122; }
+::deep tr:nth-child(even) { background-color: var(--bs-tertiary-bg); }

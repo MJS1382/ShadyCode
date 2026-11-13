@@ -10,7 +10,7 @@
 @inject ApplicationDbContext dbContext
 @inject IJSRuntime JS
 
-<div class="d-flex flex-column align-items-center m-5 text-light">
+<div class="d-flex flex-column align-items-center m-5">
     <p class="text-center @(message.Item2)">@message.Item1</p>
     <h3 class="mb-5">Management Dashboard</h3>
     <div class="grid">
@@ -26,12 +26,20 @@
             <PropertyColumn Property="@(c => c.ViewCount)" Sortable="true" Align="Align.Right" />
             <PropertyColumn Property="@(c => c.PublishDate)" Sortable="true" Align="Align.Right" />
             <TemplateColumn Title="Actions">
-                <div class="p-3">
-                    <button class="btn btn-success" @onclick="() => Publish(context)">Publish</button>
-                    <button class="btn btn-success" @onclick="() => Feature(context)">Feature</button>
-                    <button class="btn btn-primary" @onclick="() => View(context)">View</button>
-                    <button class="btn btn-warning" @onclick="() => Edit(context)">Edit</button>
-                    <button class="btn btn-primary btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop" @onclick="() => OpenRemoveConfirmationModal(context)">Remove</button>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle m-3" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        
+                    </button>
+                     <ul class="dropdown-menu">
+                        <div class="p-3">
+                            <li><button class="dropdown-item" @onclick="() => Publish(context)" type="button">Publish</button></li>
+                            <li><button class="dropdown-item" @onclick="() => Feature(context)" type="button">Feature</button></li>
+                            <li><button class="dropdown-item" @onclick="() => View(context)" type="button">View</button></li>
+                            <li><button class="dropdown-item" @onclick="() => Edit(context)" type="button">Edit</button></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" @onclick="() => OpenRemoveConfirmationModal(context)">Remove</button></li>
+                        </div>
+                     </ul>
                 </div>
             </TemplateColumn>
         </QuickGrid>
