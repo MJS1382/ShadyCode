@@ -1,0 +1,272 @@
+.about-page {
+    --about-accent: #c9a879;
+    --about-line: var(--bs-border-color, #495057);
+    --about-muted: var(--bs-secondary-color, #adb5bd);
+    width: min(100% - 2rem, 960px);
+    margin: 0 auto;
+    padding: clamp(2.5rem, 7vw, 5.5rem) 0;
+    color: var(--bs-body-color);
+}
+
+.about-hero {
+    max-width: 760px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.about-eyebrow {
+    margin: 0 0 0.55rem;
+    color: var(--about-accent);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.about-hero h1,
+.about-section-heading h2,
+.about-footer h2 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 500;
+    letter-spacing: -0.035em;
+}
+
+.about-hero h1 {
+    margin: 0;
+    font-size: clamp(2.4rem, 7vw, 4.3rem);
+    line-height: 1.08;
+}
+
+.about-hero h1 span {
+    color: var(--about-accent);
+}
+
+.about-role {
+    margin: 0.8rem 0 0;
+    font-size: clamp(1.05rem, 2.5vw, 1.35rem);
+}
+
+.about-lede {
+    max-width: 660px;
+    margin: 1rem auto 1.25rem;
+    color: var(--about-muted);
+    font-size: 1.05rem;
+    line-height: 1.75;
+}
+
+.about-meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.6rem 1.25rem;
+    margin-bottom: 1.5rem;
+    color: var(--about-muted);
+    font-size: 0.9rem;
+}
+
+.about-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.about-meta i,
+.about-footer a i {
+    color: var(--about-accent);
+}
+
+.about-contact-button {
+    border: 1px solid var(--about-accent);
+    border-radius: 100px;
+    padding: 0.65rem 1.15rem;
+    color: var(--about-accent);
+}
+
+.about-contact-button:hover,
+.about-contact-button:focus-visible {
+    border-color: var(--about-accent);
+    background: var(--about-accent);
+    color: #212529;
+}
+
+.about-section {
+    margin-top: clamp(3rem, 8vw, 5rem);
+}
+
+.about-section-heading {
+    margin-bottom: 1.15rem;
+}
+
+.about-section-heading .about-eyebrow {
+    margin-bottom: 0.3rem;
+    font-size: 0.65rem;
+}
+
+.about-section-heading h2,
+.about-footer h2 {
+    margin: 0;
+    font-size: clamp(1.8rem, 4vw, 2.35rem);
+}
+
+.about-card {
+    border: 1px solid var(--about-line);
+    border-radius: 0.85rem;
+    padding: 1.25rem;
+    background: var(--bs-tertiary-bg, #2b3035);
+}
+
+.about-card-icon {
+    display: inline-block;
+    margin-bottom: 0.75rem;
+    color: var(--about-accent);
+    font-size: 1.25rem;
+}
+
+.about-card h3,
+.about-experience h3,
+.about-education h3 {
+    margin: 0 0 0.4rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+.about-card p,
+.about-experience > p,
+.about-experience li,
+.about-education p,
+.about-section-intro {
+    margin: 0;
+    color: var(--about-muted);
+    font-size: 0.92rem;
+    line-height: 1.7;
+}
+
+.about-timeline {
+    border-top: 1px solid var(--about-line);
+}
+
+.about-experience {
+    border-bottom: 1px solid var(--about-line);
+    padding: 1.25rem 0;
+}
+
+.about-experience-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.4rem 1rem;
+    margin-bottom: 0.65rem;
+}
+
+.about-company,
+.about-dates {
+    color: var(--about-muted);
+    font-size: 0.85rem;
+}
+
+.about-company,
+.about-dates {
+    margin: 0;
+}
+
+.about-company span,
+.about-education p span {
+    padding: 0 0.2rem;
+    color: var(--about-accent);
+}
+
+.about-experience ul {
+    margin: 0.6rem 0 0;
+    padding-left: 1.2rem;
+}
+
+.about-experience li + li {
+    margin-top: 0.25rem;
+}
+
+.about-section-intro {
+    margin-bottom: 0.85rem;
+}
+
+.about-skill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.about-skill-list li {
+    border: 1px solid var(--about-line);
+    border-radius: 100px;
+    padding: 0.4rem 0.8rem;
+    color: var(--bs-body-color);
+    font-size: 0.85rem;
+}
+
+.about-education {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    border: 1px solid var(--about-line);
+    border-radius: 0.85rem;
+    padding: 1.25rem;
+    background: var(--bs-tertiary-bg, #2b3035);
+}
+
+.about-education .about-card-icon {
+    flex: 0 0 auto;
+    margin: 0.1rem 0 0;
+}
+
+.about-education p + p {
+    margin-top: 0.35rem;
+}
+
+.about-footer {
+    margin-top: clamp(3rem, 8vw, 5rem);
+    border: 1px solid var(--about-line);
+    border-radius: 0.9rem;
+    padding: clamp(1.5rem, 5vw, 2.5rem);
+    background: var(--bs-tertiary-bg, #2b3035);
+    text-align: center;
+}
+
+.about-footer p {
+    margin: 0.6rem auto 1rem;
+    color: var(--about-muted);
+}
+
+.about-footer a {
+    color: var(--about-accent);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.about-footer a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 575.98px) {
+    .about-page {
+        width: min(100% - 1.5rem, 960px);
+    }
+
+    .about-hero {
+        text-align: left;
+    }
+
+    .about-meta {
+        justify-content: flex-start;
+    }
+
+    .about-experience-heading {
+        display: block;
+    }
+
+    .about-dates {
+        margin-top: 0.3rem;
+    }
+}

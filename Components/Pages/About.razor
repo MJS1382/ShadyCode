@@ -1,0 +1,14 @@
+@page "/about"
+
+<div>
+    @((MarkupString)htmlContent)
+</div>
+
+@code {
+    public string htmlContent = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        htmlContent = await File.ReadAllTextAsync("./wwwroot/html/about.html");
+    }
+}
